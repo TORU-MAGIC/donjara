@@ -38,13 +38,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(ellipse 
 .hand{display:flex;flex-wrap:wrap;gap:3px;align-items:flex-end;padding:2px}
 .tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#f8f9fa 0%,#dde1e7 100%);border:2px solid #adb5bd;border-radius:5px;box-shadow:0 2px 4px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.8);position:relative;flex-shrink:0;font-weight:bold;transition:transform .12s,box-shadow .12s,border-color .12s}
 .tile .tf{line-height:1}.tile .tn{font-size:9px;color:#c0392b;font-weight:900;line-height:1;margin-top:1px}
-.sz-lg{width:46px;height:58px}.sz-lg .tf{font-size:22px}.sz-lg .tn{font-size:11px}
+.sz-lg{width:40px;height:50px}.sz-lg .tf{font-size:19px}.sz-lg .tn{font-size:10px}
 .sz-md{width:28px;height:36px}.sz-md .tf{font-size:13px}.sz-md .tn{font-size:7px}
 .sz-sm{width:20px;height:26px}.sz-sm .tf{font-size:11px}.sz-sm .tn{font-size:6px;margin-top:0}
 .tile.fd{background:linear-gradient(160deg,#2c3e50,#1a252f);border-color:#4a5568}
 .tile.fd .tf,.tile.fd .tn{visibility:hidden}
 .tile.fd::before{content:'🀫';position:absolute;font-size:inherit}
-.sz-lg.fd::before{font-size:20px}.sz-md.fd::before{font-size:11px}.sz-sm.fd::before{font-size:9px}
+.sz-lg.fd::before{font-size:17px}.sz-md.fd::before{font-size:11px}.sz-sm.fd::before{font-size:9px}
 .tile.sel-ok{cursor:pointer}
 .tile.sel-ok:hover:not(.locked):not(.selected){transform:translateY(-8px);box-shadow:0 10px 16px rgba(0,0,0,.45);border-color:#ffd700;z-index:5}
 .tile.selected{border:3px solid #ff3333!important;border-bottom:5px solid #ff3333!important;transform:translateY(-12px) scale(1.08);box-shadow:0 12px 20px rgba(255,50,50,.55);z-index:10}
@@ -90,22 +90,27 @@ body.reach-flash{animation:reachFlash .6s ease}
 .tc-blue .tn{color:#2980b9!important}.tc-yellow .tn{color:#b8960c!important}
 .tile.tdanger{box-shadow:0 0 8px rgba(255,0,0,.7)!important;border-color:#ff0000!important}
 .tile.tsafe{box-shadow:0 0 6px rgba(0,255,150,.5)!important;border-color:#00e676!important}
-#mid-row{display:grid;grid-template-columns:auto 1fr auto;gap:4px;align-items:stretch}
+#mid-row{display:grid;grid-template-columns:auto 1fr auto;gap:4px;align-items:center}
 .p-side{background:rgba(0,0,0,.42);border:2px solid rgba(139,69,19,.5);border-radius:10px;padding:5px;display:flex;flex-direction:column;align-items:center;gap:4px;width:80px;transition:border-color .3s,box-shadow .3s}
 .p-side.active{border-color:#ff6b6b;box-shadow:0 0 16px rgba(255,107,107,.45)}
 .p-side .pa-hdr{flex-direction:column;align-items:center;text-align:center}
 .p-side .hand{display:grid;grid-template-columns:repeat(2,auto);gap:2px}
-#tbl{position:relative;background:radial-gradient(circle,#286317 0%,#153009 100%);border:5px solid #8B4513;border-radius:14px;box-shadow:inset 0 0 40px rgba(0,0,0,.5);min-height:320px;overflow:hidden}
+#tbl{position:relative;background:radial-gradient(circle,#286317 0%,#153009 100%);border:5px solid #8B4513;border-radius:14px;box-shadow:inset 0 0 40px rgba(0,0,0,.5);overflow:hidden;width:min(100%,calc(100vh - 340px));min-width:300px;aspect-ratio:1/1;margin:auto}
 #tbl-inner{position:absolute;inset:0;display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:minmax(0,auto) 1fr minmax(0,auto)}
 .dz{display:flex;align-items:center;justify-content:center;padding:2px;overflow:hidden}
-#dz-top{grid-column:1/4;grid-row:1;flex-direction:column;transform:rotate(180deg)}
-#dz-left{grid-column:1;grid-row:2;flex-direction:column;transform:rotate(90deg)}
+#dz-top{grid-column:2;grid-row:1;flex-direction:column;transform:rotate(180deg)}
+#dz-left{grid-column:1;grid-row:1/4;flex-direction:row-reverse;align-items:center;justify-content:flex-start;min-width:40px;padding:1px;gap:2px;transform:none}
 #dz-mid{grid-column:2;grid-row:2;display:flex;align-items:center;justify-content:center}
-#dz-right{grid-column:3;grid-row:2;flex-direction:column;transform:rotate(-90deg)}
-#dz-bot{grid-column:1/4;grid-row:3;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:2px}
+#dz-right{grid-column:3;grid-row:1/4;flex-direction:row;align-items:center;justify-content:flex-start;min-width:40px;padding:1px;gap:2px;transform:none}
+/* 左右捨て牌: dc-rowを縦8牌の列として横並びし、個別タイルを回転 */
+#dz-left .dc-row,#dz-right .dc-row{display:flex;flex-direction:column;align-items:center;gap:1px;width:38px;flex-shrink:0}
+/* 回転後の視覚高さ(30px)とレイアウト高さ(38px)のズレを margin で補正 */
+#dz-left .dc-tile{transform:rotate(90deg);margin:-4px 0;flex-shrink:0}
+#dz-right .dc-tile{transform:rotate(-90deg);margin:-4px 0;flex-shrink:0}
+#dz-bot{grid-column:2;grid-row:3;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:2px}
 .dc-row{display:flex;gap:2px;margin-bottom:2px;flex-wrap:nowrap}
-.dc-tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#f8f9fa,#dde1e7);border:1.5px solid #adb5bd;border-radius:4px;width:24px;height:30px;flex-shrink:0;font-weight:bold}
-.dc-tile .tf{font-size:13px;line-height:1}.dc-tile .tn{font-size:7px;color:#c0392b;font-weight:900;line-height:1;margin-top:1px}
+.dc-tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#f8f9fa,#dde1e7);border:1.5px solid #adb5bd;border-radius:4px;width:30px;height:38px;flex-shrink:0;font-weight:bold}
+.dc-tile .tf{font-size:17px;line-height:1}.dc-tile .tn{font-size:8px;color:#c0392b;font-weight:900;line-height:1;margin-top:1px}
 /* 赤五: 強調なし (通常表示) */
 /* 相手捨て牌エフェクト */
 @keyframes dcLatestPop{0%{transform:scale(0) rotate(-18deg);opacity:0;filter:brightness(2.5) drop-shadow(0 0 8px #ffd700)}55%{transform:scale(1.25) rotate(4deg);opacity:1;filter:brightness(1.6) drop-shadow(0 0 6px #ff8c00)}80%{transform:scale(.94) rotate(-1deg);filter:brightness(1.2)}100%{transform:scale(1) rotate(0);opacity:1;filter:brightness(1)}}
@@ -134,17 +139,17 @@ body.reach-flash{animation:reachFlash .6s ease}
 @media(max-width:600px){#hint-float{top:auto;bottom:100px;right:5px;left:5px;width:auto;max-height:70vh;border-radius:12px;padding:10px 10px 14px}}
 /* スマホ捨て牌: さらに小さく詰めて全牌表示 */
 @media(max-width:480px){
-  .dc-tile{width:19px;height:24px;border-radius:3px;border-width:1px}
-  .dc-tile .tf{font-size:10px}
+  .dc-tile{width:23px;height:29px;border-radius:3px;border-width:1px}
+  .dc-tile .tf{font-size:13px}
   .dc-tile .tn{font-size:6px}
   .dc-row{gap:1px;margin-bottom:1px}
   .dz{padding:1px}
-  #tbl{min-height:260px}
+  #tbl{min-width:220px}
 }
 /* 超小画面 (320px以下) */
 @media(max-width:340px){
-  .dc-tile{width:16px;height:20px}
-  .dc-tile .tf{font-size:9px}
+  .dc-tile{width:19px;height:24px}
+  .dc-tile .tf{font-size:11px}
   .dc-tile .tn{font-size:5px}
 }
 @keyframes hIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
@@ -371,6 +376,163 @@ button:disabled{opacity:.28;cursor:not-allowed;transform:none!important}
 /* 点数テキスト大きく */
 .aw-pts span{display:inline-block;animation:awPtsPop 0.5s 1.4s cubic-bezier(.17,.67,.35,1.2) both}
 @keyframes awPtsPop{from{transform:scale(0) rotate(-10deg)}to{transform:scale(1) rotate(0)}}
+
+/* ════════════════════ MEGA FX (リーチ/ロン/ツモ ド派手化) ════════════════════ */
+#mega-ov{display:none;position:fixed;inset:0;z-index:850;pointer-events:none;overflow:hidden}
+#mega-ov.on{display:block}
+#mega-canvas{display:none;position:fixed;inset:0;z-index:849;pointer-events:none}
+#mega-canvas.on{display:block}
+
+/* リーチ中の常時赤ビネット (BGM中) */
+#reach-vignette{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at center,transparent 35%,rgba(255,30,30,.18) 75%,rgba(180,0,0,.42) 100%);
+  transition:opacity .4s ease}
+body.reach-bgm-on #reach-vignette{opacity:1;animation:redBeat 1s ease-in-out infinite}
+@keyframes redBeat{0%,100%{opacity:.45;filter:hue-rotate(0)}50%{opacity:.92;filter:hue-rotate(-15deg) brightness(1.2)}}
+
+/* 画面シェイク (bodyではなく#mainに当てる) */
+@keyframes screenShake{
+  0%,100%{transform:translate3d(0,0,0)}
+  10%{transform:translate3d(-12px,-4px,0) rotate(-.5deg)}
+  20%{transform:translate3d(12px,5px,0) rotate(.5deg)}
+  30%{transform:translate3d(-10px,8px,0) rotate(-.4deg)}
+  40%{transform:translate3d(10px,-7px,0) rotate(.3deg)}
+  50%{transform:translate3d(-8px,3px,0)}
+  60%{transform:translate3d(8px,-2px,0)}
+  70%{transform:translate3d(-5px,4px,0)}
+  80%{transform:translate3d(5px,-3px,0)}
+  90%{transform:translate3d(-2px,2px,0)}
+}
+body.shake #main{animation:screenShake .65s cubic-bezier(.36,.07,.19,.97) both}
+
+/* ━━ リーチ演出 (#mega-ov.m-reach) ━━ */
+#mega-ov.m-reach::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(255,40,40,.35) 0%,rgba(80,0,0,.85) 60%,#000 100%);animation:reachBg .3s ease-out forwards}
+@keyframes reachBg{from{opacity:0}to{opacity:1}}
+.m-shock{position:absolute;top:50%;left:50%;width:60px;height:60px;border-radius:50%;border:5px solid #ff3030;
+  transform:translate(-50%,-50%) scale(0);animation:megaShockwave 1s ease-out forwards}
+@keyframes megaShockwave{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:1;border-width:8px;box-shadow:0 0 0 0 rgba(255,80,80,.9),0 0 80px rgba(255,40,40,1)}
+  100%{transform:translate(-50%,-50%) scale(28);opacity:0;border-width:1px;box-shadow:0 0 0 0 rgba(255,80,80,0)}
+}
+.m-logo3d{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);font-size:clamp(64px,16vw,140px);
+  font-weight:900;color:#ffd700;letter-spacing:8px;
+  text-shadow:0 0 20px #ff0000,0 0 50px #ff6600,0 0 100px #ffaa00,4px 4px 0 #800;
+  animation:megaZoomIn .8s cubic-bezier(.17,.67,.35,1.2) forwards,reachLogoPulse .5s .8s ease-in-out 4}
+@keyframes megaZoomIn{
+  0%{opacity:0;transform:translate(-50%,-50%) perspective(800px) rotateY(-90deg) scale(.2);filter:blur(30px)}
+  50%{opacity:1;transform:translate(-50%,-50%) perspective(800px) rotateY(20deg) scale(1.4);filter:blur(2px)}
+  100%{opacity:1;transform:translate(-50%,-50%) perspective(800px) rotateY(0) scale(1);filter:blur(0)}
+}
+@keyframes reachLogoPulse{0%,100%{filter:brightness(1) drop-shadow(0 0 0 #f00)}50%{filter:brightness(1.8) drop-shadow(0 0 30px #f00)}}
+.m-rays{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 45%,transparent 0deg 8deg,rgba(255,200,0,.18) 8deg 12deg);animation:raysSpin 2s linear infinite}
+@keyframes raysSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* ━━ ロン演出 (#mega-ov.m-ron) ━━ */
+#mega-ov.m-ron::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(120,0,0,.6) 0%,rgba(20,0,0,.95) 70%,#000 100%);animation:slowFlash 2.4s ease-out forwards}
+@keyframes slowFlash{
+  0%{opacity:0;backdrop-filter:blur(0)}
+  10%{opacity:1;backdrop-filter:blur(10px)}
+  60%{opacity:1;backdrop-filter:blur(2px)}
+  100%{opacity:.5;backdrop-filter:blur(0)}
+}
+.m-crack{position:absolute;inset:0;background:
+  linear-gradient(120deg,transparent 48%,#fff 49%,#fff 51%,transparent 52%) center/100% 100%,
+  linear-gradient(60deg,transparent 49%,#fff 49.5%,#fff 50.5%,transparent 51%) center/100% 100%,
+  linear-gradient(160deg,transparent 49%,#fff 49.5%,#fff 50.5%,transparent 51%) center/100% 100%;
+  mix-blend-mode:screen;opacity:0;animation:glassCrack 1.4s ease-out forwards;
+  filter:drop-shadow(0 0 6px #fff)}
+@keyframes glassCrack{
+  0%{opacity:0;transform:scale(0)}
+  10%{opacity:1;transform:scale(1.1)}
+  30%{opacity:.9}
+  100%{opacity:0;transform:scale(1.4)}
+}
+.m-ron-logo{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);
+  font-size:clamp(80px,22vw,200px);font-weight:900;letter-spacing:12px;
+  color:#fff;-webkit-text-stroke:3px #c00;
+  text-shadow:0 0 30px #ff0000,0 0 80px #ff0000,0 0 160px #ff5500,8px 8px 0 #500;
+  animation:megaZoomIn .7s cubic-bezier(.17,.67,.35,1.2) forwards,ronLogoShake .08s 1s linear 6,ronLogoGlow 1s 1.5s ease-in-out infinite}
+@keyframes ronLogoShake{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(-52%,-50%)}50%{transform:translate(-50%,-52%)}75%{transform:translate(-48%,-50%)}}
+@keyframes ronLogoGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6) hue-rotate(-10deg)}}
+.m-yaku-scroll{position:absolute;top:62%;left:0;width:100%;
+  background:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.85) 15%,rgba(0,0,0,.85) 85%,transparent 100%);
+  padding:14px 0;font-size:clamp(18px,4.5vw,32px);font-weight:bold;color:#ffd700;
+  text-align:center;letter-spacing:4px;text-shadow:0 0 12px #ff8800;
+  white-space:nowrap;overflow:hidden;animation:yakuScroll 2.4s 1.2s ease-out forwards;opacity:0}
+@keyframes yakuScroll{
+  0%{opacity:0;transform:translateX(100%)}
+  20%{opacity:1;transform:translateX(0)}
+  80%{opacity:1;transform:translateX(0)}
+  100%{opacity:0;transform:translateX(-30%)}
+}
+#mega-ov.m-ron.rk-yakuman .m-ron-logo{color:#ff44ff;-webkit-text-stroke:3px #800080;text-shadow:0 0 40px #f0f,0 0 100px #f0f,0 0 200px #a0a}
+#mega-ov.m-ron.rk-platinum .m-ron-logo{color:#e0f0ff;-webkit-text-stroke:3px #0080ff;text-shadow:0 0 40px #00ccff,0 0 100px #0080ff}
+
+/* ━━ ツモ演出 (#mega-ov.m-tsumo) ━━ */
+#mega-ov.m-tsumo::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(255,200,80,.45) 0%,rgba(60,40,0,.92) 70%,#000 100%);animation:reachBg .3s ease-out forwards}
+.m-light-rain{position:absolute;inset:0;background:
+  repeating-linear-gradient(180deg,transparent 0px,transparent 16px,rgba(255,230,150,.5) 16px,rgba(255,230,150,.5) 18px);
+  background-size:100% 200%;animation:lightRain 1.5s linear infinite}
+@keyframes lightRain{from{background-position-y:0}to{background-position-y:100%}}
+.m-conc{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 42%,
+  transparent 0deg 4deg,rgba(255,255,255,.45) 4deg 6deg);
+  animation:concentLines 1.6s linear infinite;mix-blend-mode:screen}
+@keyframes concentLines{0%{transform:rotate(0) scale(.8)}100%{transform:rotate(360deg) scale(1.2)}}
+.m-tsumo-logo{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);
+  font-size:clamp(80px,22vw,200px);font-weight:900;letter-spacing:12px;
+  color:#ffd700;-webkit-text-stroke:3px #ff8800;
+  text-shadow:0 0 30px #ffd700,0 0 80px #ff8c00,0 0 160px #ffaa00,8px 8px 0 #642;
+  animation:megaZoomIn .7s cubic-bezier(.17,.67,.35,1.2) forwards,tsumoLogoSpin .8s 1s ease-in-out infinite}
+@keyframes tsumoLogoSpin{0%,100%{filter:brightness(1) hue-rotate(0)}50%{filter:brightness(1.5) hue-rotate(20deg)}}
+
+/* 上がり牌 金光沢 */
+@keyframes goldShine{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+.tile.gold-shine{
+  background:linear-gradient(110deg,#ffd700 0%,#fff8c0 30%,#ffffff 50%,#fff8c0 70%,#ffd700 100%) !important;
+  background-size:200% 100% !important;
+  border:3px solid #ffaa00 !important;
+  box-shadow:0 0 24px rgba(255,200,0,.95),0 0 48px rgba(255,140,0,.5) !important;
+  animation:goldShine 1.2s linear infinite !important;
+  z-index:20;position:relative
+}
+
+/* 山牌警告 (フェーズ3で有効化) */
+#h-dk.warn{color:#ffa500 !important;font-weight:900;text-shadow:0 0 8px rgba(255,165,0,.7)}
+#h-dk.danger{color:#ff3030 !important;font-weight:900;animation:blink .5s infinite;text-shadow:0 0 10px rgba(255,40,40,.9)}
+
+/* 危険牌ヒートマップ (手牌・河) */
+.tile[data-danger="hi"],.dc-tile[data-danger="hi"]{box-shadow:0 0 0 2px #ff2222 inset,0 0 10px rgba(255,40,40,.8) !important}
+.tile[data-danger="mid"],.dc-tile[data-danger="mid"]{box-shadow:0 0 0 2px #ffa500 inset,0 0 8px rgba(255,165,0,.6) !important}
+.tile[data-danger="safe"],.dc-tile[data-danger="safe"]{box-shadow:0 0 0 2px #00e676 inset,0 0 6px rgba(0,230,118,.5) !important}
+
+/* 捨て傾向バッジ */
+.disc-stat{display:inline-block;margin-left:6px;padding:1px 5px;background:rgba(100,100,200,.18);
+  border:1px solid rgba(100,150,255,.3);border-radius:4px;font-size:10px;color:#bcd;font-weight:normal}
+/* 左右・上プレイヤー用 捨て傾向ミニ表示 */
+.disc-stat-mini{font-size:9px;color:#bcd;text-align:center;line-height:1.5;padding:1px 2px;
+  background:rgba(100,100,200,.12);border:1px solid rgba(100,150,255,.2);border-radius:3px;
+  width:100%;word-break:break-all;box-sizing:border-box}
+.disc-stat-mini:empty{display:none}
+
+/* 戦績バー */
+#score-bars{display:flex;flex-direction:column;gap:3px;padding:4px}
+.sb-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#ccc}
+.sb-name{min-width:60px;flex-shrink:0}
+.sb-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;position:relative}
+.sb-fill{height:100%;border-radius:4px;transition:width .4s ease;background:linear-gradient(90deg,#27ae60,#2ecc71)}
+.sb-fill.me{background:linear-gradient(90deg,#ffd700,#ff8c00)}
+.sb-fill.minus{background:linear-gradient(90deg,#c0392b,#e74c3c)}
+.sb-pt{min-width:46px;text-align:right;font-weight:bold;font-size:11px}
+.sb-pt.minus{color:#f88}.sb-pt.plus{color:#7df}
+
+/* 同巡フリテン */
+.htemp-furi{color:#f90;font-size:11px;font-weight:bold;background:rgba(255,165,0,.1);
+  border:1px solid rgba(255,165,0,.3);border-radius:4px;padding:3px 7px;margin:3px 0}
+.badge.b-tempfuri{background:#a85;color:#ffe}
+
 </style>
 </head>
 <body>
@@ -392,15 +554,15 @@ button:disabled{opacity:.28;cursor:not-allowed;transform:none!important}
 </div>
 <div id="main">
 <div id="field">
-  <div class="pa" id="pa-top"><div class="pa-hdr"><span class="pa-name" id="pn-top">待機中</span><span class="pa-score" id="ps-top">300</span></div><div class="hand" id="hd-top"></div><div class="melds-row" id="ml-top"></div></div>
+  <div class="pa" id="pa-top"><div class="pa-hdr"><span class="pa-name" id="pn-top">待機中</span><span class="pa-score" id="ps-top">300</span></div><div class="disc-stat-mini" id="ds-top"></div><div class="hand" id="hd-top"></div><div class="melds-row" id="ml-top"></div></div>
   <div id="mid-row">
-    <div class="p-side pa" id="pa-left"><div class="pa-hdr"><span class="pa-name" id="pn-left">待機中</span><span class="pa-score" id="ps-left">300</span></div><div class="hand" id="hd-left"></div><div class="melds-row" id="ml-left"></div></div>
+    <div class="p-side pa" id="pa-left"><div class="pa-hdr"><span class="pa-name" id="pn-left">待機中</span><span class="pa-score" id="ps-left">300</span></div><div class="disc-stat-mini" id="ds-left"></div><div class="hand" id="hd-left"></div><div class="melds-row" id="ml-left"></div></div>
     <div id="tbl"><div id="tbl-inner">
       <div class="dz" id="dz-top"></div><div class="dz" id="dz-left"></div>
       <div id="dz-mid"><div id="pot"><div class="pot-r" id="pot-rd">R0</div><div class="pot-n" id="pot-dk">🀄</div><div class="pot-l">残り</div><div class="pot-h" id="pot-hn"></div></div></div>
       <div class="dz" id="dz-right"></div><div class="dz" id="dz-bot"></div>
     </div></div>
-    <div class="p-side pa" id="pa-right"><div class="pa-hdr"><span class="pa-name" id="pn-right">待機中</span><span class="pa-score" id="ps-right">300</span></div><div class="hand" id="hd-right"></div><div class="melds-row" id="ml-right"></div></div>
+    <div class="p-side pa" id="pa-right"><div class="pa-hdr"><span class="pa-name" id="pn-right">待機中</span><span class="pa-score" id="ps-right">300</span></div><div class="disc-stat-mini" id="ds-right"></div><div class="hand" id="hd-right"></div><div class="melds-row" id="ml-right"></div></div>
   </div>
   <div class="pa" id="pa-bot"><div class="pa-hdr"><span class="pa-name" id="pn-bot">あなた</span><span class="pa-score" id="ps-bot">300</span></div><div class="melds-row" id="ml-bot"></div><div class="hand" id="hd-bot"></div></div>
 </div>
@@ -428,6 +590,7 @@ button:disabled{opacity:.28;cursor:not-allowed;transform:none!important}
     <button class="b-draw"  id="btn-draw"  onclick="G.actDraw()"    disabled>🀄 引く</button>
     <button class="b-disc"  id="btn-disc"  onclick="G.actDiscard()" disabled>捨てる</button>
     <button class="b-reach" id="btn-reach" onclick="G.actReach()"   disabled>🔥 リーチ</button>
+    <button class="b-disc"  id="btn-rcancel" onclick="G.cancelReach()" style="display:none;background:linear-gradient(145deg,#7f8c8d,#566573)">↩ 取消</button>
     <button class="b-tsumo" id="btn-tsumo" onclick="G.actTsumo()"   disabled>✨ ツモ</button>
     <button class="b-ron"   id="btn-ron"   onclick="G.actRon()"     disabled>🎯 ロン！</button>
     <button class="b-pon"   id="btn-pon"   onclick="G.actPon()"     disabled>🀄 ポン！</button>
@@ -625,7 +788,72 @@ const SFX=(()=>{
       if(han>=4)setTimeout(()=>{beamVolley(2);explosion(600,0.4);},blastDelay+800);
       if(han>=6)setTimeout(()=>{chord([523,659,784,1047,1319,1568],1.5,'sine',0.35);explosion(200,0.5);},blastDelay+1800);
     },
-    beam,beamVolley,explosion
+    // ★ 心拍音 (リーチBGM/MEGAリーチ用) - 60-80Hzキック2連
+    heartbeat:(n=1)=>{const x=gc();if(!x)return;
+      for(let i=0;i<n;i++){
+        const t=x.currentTime+i*0.7;
+        [0,0.18].forEach((off,j)=>{
+          const o=x.createOscillator(),g=x.createGain();
+          o.type='sine';
+          o.frequency.setValueAtTime(140,t+off);
+          o.frequency.exponentialRampToValueAtTime(38,t+off+0.13);
+          g.gain.setValueAtTime(j===0?0.55:0.4,t+off);
+          g.gain.exponentialRampToValueAtTime(0.001,t+off+0.18);
+          o.connect(g);g.connect(x.destination);
+          o.start(t+off);o.stop(t+off+0.2);
+        });
+      }
+    },
+    // ★ 雷鳴 (リーチMEGA演出用)
+    thunder:()=>{const x=gc();if(!x)return;
+      noise(0.18,0.55,300);
+      setTimeout(()=>{
+        const t=x.currentTime;
+        const o=x.createOscillator(),g=x.createGain();
+        o.type='sawtooth';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(40,t+0.5);
+        g.gain.setValueAtTime(0.45,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+        o.connect(g);g.connect(x.destination);o.start(t);o.stop(t+0.75);
+      },50);
+      setTimeout(()=>noise(0.35,0.32,180),200);
+    },
+    // ★ ガラス割れ (ロンMEGA演出用)
+    glassBreak:()=>{const x=gc();if(!x)return;
+      noise(0.05,0.55,3500);
+      setTimeout(()=>{
+        // 高周波の金属片が散る音
+        [2200,2800,3400,1800,2600].forEach((f,i)=>{
+          const t=x.currentTime+i*0.04;
+          const o=x.createOscillator(),g=x.createGain();
+          o.type='triangle';o.frequency.setValueAtTime(f,t);
+          o.frequency.exponentialRampToValueAtTime(f*0.4,t+0.3);
+          g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+          o.connect(g);g.connect(x.destination);o.start(t);o.stop(t+0.4);
+        });
+      },20);
+      setTimeout(()=>noise(0.15,0.3,2000),60);
+    },
+    // ★ 拡張ファンファーレ (ツモMEGA演出用、han別に長尺化)
+    fanfareEx:(han=1)=>{
+      const x=gc();if(!x)return;
+      const seqs=[
+        [523,659,784,1047],[659,784,988,1319],[784,988,1175,1568],[988,1175,1397,1760],[1175,1397,1760,2093]
+      ];
+      const layers=Math.min(han+1,5);
+      for(let i=0;i<layers;i++){
+        setTimeout(()=>chord(seqs[i],0.18,'sine',0.32),i*150);
+      }
+      setTimeout(()=>chord([523,659,784,1047,1319,1568,2093],0.9,'sine',0.4),layers*150+100);
+      // 役満級は更に追加
+      if(han>=6){
+        setTimeout(()=>{
+          chord([1319,1568,2093,2637],1.2,'sine',0.42);
+          beamVolley(3);
+        },layers*150+800);
+      }
+    },
+    beam,beamVolley,explosion,
+    // ★ AudioContext共有 (ReachBGMが利用)
+    get _ctx(){return ctx;}
   };
 })();
 
@@ -675,6 +903,269 @@ const FX={
     FX.discSpark(r.left+r.width/2,r.top+r.height/2);
   }
 };
+
+// ════════════════════ MEGA FX (リーチ/ロン/ツモ ド派手化) ════════════════════
+const MEGA_FX=(()=>{
+  let canvasAnim=null;
+  function _hanRank(han){
+    if(han>=6)return 'rk-yakuman';
+    if(han>=4)return 'rk-platinum';
+    if(han>=3)return 'rk-gold';
+    if(han>=2)return 'rk-silver';
+    return 'rk-bronze';
+  }
+  function _yakuText(yakuList){
+    if(!yakuList||!yakuList.length)return '';
+    return yakuList.map(y=>`★ ${y.name} ${y.han}翻`).join('　 ');
+  }
+  function _stopCanvas(){if(canvasAnim){cancelAnimationFrame(canvasAnim);canvasAnim=null;}
+    const c=document.getElementById('mega-canvas');if(c){c.classList.remove('on');const ctx=c.getContext('2d');if(ctx)ctx.clearRect(0,0,c.width,c.height);}}
+  function _startCanvas(type){
+    const c=document.getElementById('mega-canvas');if(!c)return;
+    c.width=window.innerWidth;c.height=window.innerHeight;c.classList.add('on');
+    const ctx=c.getContext('2d');
+    const parts=[];
+    const palette=type==='ron'?['#ff3030','#ffaa00','#ffffff','#ff6600']
+                 :type==='tsumo'?['#ffd700','#ffffff','#ffaa00','#ff8800','#fff8c0']
+                 :['#ff3030','#ffd700','#ffaa00','#ffffff'];
+    const count=type==='reach'?40:60;
+    for(let i=0;i<count;i++){
+      parts.push({
+        x:c.width/2,y:c.height*0.42,
+        vx:(Math.random()-0.5)*16,vy:(Math.random()-0.7)*18,
+        g:type==='ron'?0.5:0.35,
+        size:2+Math.random()*5,
+        life:60+Math.random()*60,
+        color:palette[i%palette.length],
+        rot:Math.random()*Math.PI*2,vrot:(Math.random()-0.5)*0.3
+      });
+    }
+    let frame=0;
+    function loop(){
+      ctx.clearRect(0,0,c.width,c.height);
+      parts.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.life--;p.rot+=p.vrot;
+        if(p.life>0){
+          ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+          ctx.fillStyle=p.color;ctx.globalAlpha=Math.min(1,p.life/30);
+          ctx.shadowBlur=12;ctx.shadowColor=p.color;
+          ctx.fillRect(-p.size,-p.size,p.size*2,p.size*2);
+          ctx.restore();
+        }
+      });
+      frame++;
+      // 追加噴出 (ロン/ツモのみ、20フレームごと)
+      if(frame<60&&frame%8===0&&type!=='reach'){
+        for(let k=0;k<10;k++){
+          parts.push({
+            x:c.width/2+(Math.random()-0.5)*200,y:c.height*0.45,
+            vx:(Math.random()-0.5)*14,vy:(Math.random()-0.9)*16,
+            g:0.4,size:2+Math.random()*4,life:50+Math.random()*40,
+            color:palette[k%palette.length],rot:0,vrot:(Math.random()-0.5)*0.2
+          });
+        }
+      }
+      if(parts.some(p=>p.life>0)&&frame<200)canvasAnim=requestAnimationFrame(loop);
+      else _stopCanvas();
+    }
+    canvasAnim=requestAnimationFrame(loop);
+  }
+  return {
+    // ━━ リーチ: 暗転 → 3Dロゴ → ショックウェーブ → 雷 → 残光ビネット ━━
+    reach(){
+      const ov=document.getElementById('mega-ov');if(!ov)return;
+      ov.className='m-reach on';
+      ov.innerHTML=`<div class="m-rays"></div>
+        <div class="m-shock"></div>
+        <div class="m-logo3d">⚡ リーチ ⚡</div>`;
+      _startCanvas('reach');
+      SFX.thunder();
+      setTimeout(()=>SFX.heartbeat(1),300);
+      setTimeout(()=>{ov.classList.remove('on');ov.className='';ov.innerHTML='';},1900);
+    },
+    // ━━ ロン: 画面割れ + シェイク + スロー暗転 + 役名スクロール ━━
+    ron(yakuList,han){
+      const ov=document.getElementById('mega-ov');if(!ov)return;
+      const rank=_hanRank(han||1);
+      ov.className=`m-ron on ${rank}`;
+      ov.innerHTML=`<div class="m-crack"></div>
+        <div class="m-ron-logo">ロン!!</div>
+        <div class="m-yaku-scroll">${_yakuText(yakuList)} 　 ${han||0}翻</div>`;
+      document.body.classList.add('shake');
+      _startCanvas('ron');
+      SFX.glassBreak();
+      setTimeout(()=>document.body.classList.remove('shake'),700);
+      setTimeout(()=>{ov.classList.remove('on');ov.className='';ov.innerHTML='';},2600);
+    },
+    // ━━ ツモ: 光線降下 + 集中線 + 上がり牌金光沢 + 拡張ファンファーレ ━━
+    tsumo(yakuList,han){
+      const ov=document.getElementById('mega-ov');if(!ov)return;
+      const rank=_hanRank(han||1);
+      ov.className=`m-tsumo on ${rank}`;
+      ov.innerHTML=`<div class="m-light-rain"></div>
+        <div class="m-conc"></div>
+        <div class="m-tsumo-logo">ツモ!!</div>
+        <div class="m-yaku-scroll">${_yakuText(yakuList)} 　 ${han||0}翻</div>`;
+      // 自分の手牌の最後の牌に金光沢
+      document.querySelectorAll('#hd-bot .tile').forEach((t,i,arr)=>{
+        if(i===arr.length-1)t.classList.add('gold-shine');
+      });
+      _startCanvas('tsumo');
+      SFX.fanfareEx(han||1);
+      setTimeout(()=>{
+        ov.classList.remove('on');ov.className='';ov.innerHTML='';
+        document.querySelectorAll('.tile.gold-shine').forEach(t=>t.classList.remove('gold-shine'));
+      },2600);
+    },
+    // ━━ 演出を即座に消す (ラウンド終了時など) ━━
+    clear(){
+      const ov=document.getElementById('mega-ov');if(ov){ov.classList.remove('on');ov.className='';ov.innerHTML='';}
+      document.body.classList.remove('shake');
+      document.querySelectorAll('.tile.gold-shine').forEach(t=>t.classList.remove('gold-shine'));
+      _stopCanvas();
+    }
+  };
+})();
+
+// ════════════════════ ReachBGM (リーチ中ドキドキBGM) ════════════════════
+const ReachBGM=(()=>{
+  let running=false,tid=null,step=0,bpm=90,suspended=false;
+
+  // ── キック: 低い打撃音 ──
+  function _kick(x,t,v=0.6){
+    const o=x.createOscillator(),g=x.createGain();
+    o.type='sine';
+    o.frequency.setValueAtTime(200,t);
+    o.frequency.exponentialRampToValueAtTime(40,t+0.09);
+    g.gain.setValueAtTime(v,t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+    o.connect(g);g.connect(x.destination);
+    o.start(t);o.stop(t+0.22);
+  }
+
+  // ── スネア: ノイズ＋トーン混合 ──
+  function _snare(x,t,v=0.3){
+    const len=Math.floor(x.sampleRate*0.14);
+    const buf=x.createBuffer(1,len,x.sampleRate);
+    const ch=buf.getChannelData(0);
+    for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1);
+    const src=x.createBufferSource();src.buffer=buf;
+    const hp=x.createBiquadFilter();hp.type='highpass';hp.frequency.value=2000;
+    const g=x.createGain();
+    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.1);
+    src.connect(hp);hp.connect(g);g.connect(x.destination);src.start(t);src.stop(t+0.16);
+    // トーン成分 (ボディ)
+    const o=x.createOscillator(),og=x.createGain();
+    o.type='triangle';o.frequency.setValueAtTime(240,t);
+    o.frequency.exponentialRampToValueAtTime(110,t+0.07);
+    og.gain.setValueAtTime(v*0.55,t);og.gain.exponentialRampToValueAtTime(0.001,t+0.08);
+    o.connect(og);og.connect(x.destination);o.start(t);o.stop(t+0.1);
+  }
+
+  // ── ハイハット: 高周波ノイズ ──
+  function _hat(x,t,v=0.14,dur=0.035){
+    const len=Math.floor(x.sampleRate*(dur+0.01));
+    const buf=x.createBuffer(1,len,x.sampleRate);
+    const ch=buf.getChannelData(0);
+    for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1);
+    const src=x.createBufferSource();src.buffer=buf;
+    const hp=x.createBiquadFilter();hp.type='highpass';hp.frequency.value=10000;
+    const g=x.createGain();
+    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    src.connect(hp);hp.connect(g);g.connect(x.destination);src.start(t);src.stop(t+dur+0.01);
+  }
+
+  // ── ベース: ノコギリ波＋ローパス ──
+  function _bass(x,t,f,d=0.38,vol=0.28){
+    const o=x.createOscillator(),g=x.createGain(),lp=x.createBiquadFilter();
+    o.type='sawtooth';o.frequency.setValueAtTime(f,t);
+    lp.type='lowpass';lp.frequency.setValueAtTime(420,t);lp.Q.value=5;
+    g.gain.setValueAtTime(0.001,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,t+d);
+    o.connect(lp);lp.connect(g);g.connect(x.destination);
+    o.start(t);o.stop(t+d+0.04);
+  }
+
+  // ── リードメロディ: triangle＋微デチューン (明るく軽い音色) ──
+  function _lead(x,t,f,d=0.28,vol=0.10){
+    const o=x.createOscillator(),o2=x.createOscillator(),g=x.createGain();
+    o.type='triangle';o.frequency.setValueAtTime(f,t);
+    o2.type='triangle';o2.frequency.setValueAtTime(f*1.005,t);
+    g.gain.setValueAtTime(0.001,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,t+d);
+    o.connect(g);o2.connect(g);g.connect(x.destination);
+    o.start(t);o2.start(t);o.stop(t+d+0.04);o2.stop(t+d+0.04);
+  }
+
+  // ── 16ステップ×4小節ループ ──
+  // コード進行: C → G → Am → F (明るいポップ進行)
+  // ベース音程(Hz): C2=65.4, G2=98, A2=110, F2=87.3
+  // リードメロ: Cメジャーペンタトニック C5=523, E5=659, G5=784, A5=880, B4=494, D5=587
+  const BASS_PAT=[
+    [65.4,0,0,0, 0,0,65.4,0, 65.4,0,0,0, 0,0,0,0], // C bar0
+    [98,  0,0,0, 0,0,98,  0, 98,  0,0,0, 0,0,0,0], // G bar1
+    [110, 0,0,0, 0,0,110, 0, 65.4,0,0,0, 0,0,0,0], // Am bar2
+    [87.3,0,0,0, 0,0,87.3,0,  0,  0,0,0, 0,0,0,0], // F bar3
+  ];
+  const LEAD_PAT=[
+    [0,0,0,0, 523,0,0,0, 659,0,0,0, 784,0,0,0],    // C→E→G (明るい上昇)
+    [0,0,0,0, 392,0,0,0, 494,0,0,0, 587,0,0,0],    // G→B→D (明るいG進行)
+    [0,0,0,0, 440,0,523,0, 0,0,659,0, 0,0,0,0],    // A→C→E
+    [0,0,0,0, 349,0,0,0, 440,0,523,0, 659,0,0,0],  // F→A→C→E (クライマックス)
+  ];
+
+  function _tick(){
+    if(!running||suspended){tid=null;return;}
+    const x=SFX._ctx;
+    if(!x){tid=setTimeout(_tick,500);return;}
+    if(x.state==='suspended'){try{x.resume();}catch(e){}}
+    const t=x.currentTime;
+    const s=step%16;
+    const phase=Math.floor(step/16)%4;
+
+    // ドラムパターン (16分音符)
+    if(s===0){_kick(x,t,0.65);_kick(x,t+0.07,0.38);}  // 1拍ダブルキック
+    if(s===8){_kick(x,t,0.55);_kick(x,t+0.065,0.32);}  // 3拍ダブルキック
+    if(s===12)_kick(x,t,0.28);                          // 4拍オフキック
+    if(s===4||s===12)_snare(x,t,0.34);                  // 2拍・4拍スネア
+    if(s%2===0)_hat(x,t,0.13);                          // 8分ハイハット
+    if(s===3||s===7||s===11||s===15)_hat(x,t,0.06,0.07); // シンコペーション
+
+    // ベースライン
+    const bf=BASS_PAT[phase][s];
+    if(bf)_bass(x,t,bf,s===0||s===8?0.42:0.28);
+
+    // リードメロ
+    const mf=LEAD_PAT[phase][s];
+    if(mf)_lead(x,t,mf,0.26,0.09);
+
+    // フレーズ最終小節の最終ステップ: Cメジャー上昇アルペジオで次フレーズへ
+    if(phase===3&&s===15){
+      [261.6,329.6,392,523].forEach((f,i)=>_lead(x,t+i*0.05,f,0.14,0.09));
+    }
+
+    step++;
+    tid=setTimeout(_tick, (60000/bpm)/4); // 16分音符間隔
+  }
+
+  return {
+    start(){if(running)return;running=true;suspended=false;step=0;_tick();},
+    stop(){running=false;suspended=false;if(tid){clearTimeout(tid);tid=null;}},
+    setBpm(v){bpm=Math.max(60,Math.min(180,v));},
+    suspend(){if(!running)return;suspended=true;if(tid){clearTimeout(tid);tid=null;}},
+    resume(){if(!running||!suspended)return;suspended=false;_tick();},
+    isRunning(){return running;}
+  };
+})();
+// ★ visibilitychange: 裏に回るとBGMをsuspend、復帰でresume (iOS Safari対策)
+if(typeof document!=='undefined'){
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden)ReachBGM.suspend();
+    else ReachBGM.resume();
+  });
+}
 
 class Tile{
   constructor(c,n){this.char=c;this.num=n;}
@@ -738,7 +1229,8 @@ function yakuDetect(hand,res,openMelds,ctx){
 
   if(!isOpen&&ctx.isDoubleReach)yaku.push({name:'ダブルリーチ',han:2});
   else if(!isOpen&&ctx.isReach)yaku.push({name:'リーチ',han:1});
-  // ★ 一発役: このゲームでは実装困難なため除外
+  // ★ Sev低: 一発役 (リーチ後、自分の次ドロー前にツモ・ロン)
+  if(!isOpen&&(ctx.isReach||ctx.isDoubleReach)&&ctx.ippatsu)yaku.push({name:'一発',han:1});
   if(!isOpen&&ctx.isTsumo&&!ctx.isRinshan)yaku.push({name:'門前ツモ',han:1});
   if(ctx.isHaitei&&ctx.isTsumo)yaku.push({name:'ハイテイ',han:1});
   if(ctx.isHoutei&&!ctx.isTsumo)yaku.push({name:'河底',han:1});
@@ -956,7 +1448,7 @@ class Player{
     this.hand=[];this.discards=[];this.melds=[];
     this.score=START_PT;this.isReach=false;this.pendingReach=false;
     this.validReachIdx=[];this.waiting=[];this.ippatsu=false;
-    this.selIdx=-1;this.furiten=false;this.isDoubleReach=false;
+    this.selIdx=-1;this.furiten=false;this.tempFuriten=false;this.isDoubleReach=false;
     this.justPonned=false;this.firstDraw=true;
     this.genbutsu=new Set();this.safeSet=new Set();
     this.ai=isHuman?null:new AI(cpuType);
@@ -966,7 +1458,7 @@ class Player{
     this.hand=[];this.discards=[];this.melds=[];
     this.isReach=false;this.pendingReach=false;this.validReachIdx=[];
     this.waiting=[];this.ippatsu=false;this.selIdx=-1;
-    this.furiten=false;this.isDoubleReach=false;this.justPonned=false;
+    this.furiten=false;this.tempFuriten=false;this.isDoubleReach=false;this.justPonned=false;
     this.firstDraw=true;this.genbutsu=new Set();this.safeSet=new Set();
   }
   sortHand(){
@@ -975,7 +1467,7 @@ class Player{
     this.hand.sort((a,b)=>{const ka=a.char*10+a.num,kb=b.char*10+b.num;if(ka===jKey&&kb!==jKey)return-1;if(ka!==jKey&&kb===jKey)return 1;return a.char!==b.char?a.char-b.char:a.num-b.num;});
   }
   upWait(){this.waiting=tenpai(this.hand,this.melds);}
-  canWinWith(t){if(this.furiten)return false;return t&&this.waiting.some(w=>w.char===t.char&&w.num===t.num);}
+  canWinWith(t){if(this.furiten||this.tempFuriten)return false;return t&&this.waiting.some(w=>w.char===t.char&&w.num===t.num);}
   canPon(t){return t&&!this.isReach&&!this.pendingReach&&this.melds.length<MAX_MELDS&&this.hand.filter(h=>h.char===t.char&&h.num===t.num).length>=2;}
   canDaiminKan(t){return t&&!this.isReach&&this.melds.length<MAX_MELDS&&this.hand.filter(h=>h.char===t.char&&h.num===t.num).length===3;}
   canAnKan(){if(this.isReach)return[];const cnt={};this.hand.forEach(t=>{const k=t.char*100+t.num;cnt[k]=(cnt[k]||0)+1;});return Object.entries(cnt).filter(([,v])=>v===4).map(([k])=>({char:Math.floor(parseInt(k)/100),num:parseInt(k)%100}));}
@@ -1078,14 +1570,20 @@ class Net{
     }
     else if(type==='ROUND_RESULT'){this.eng._onRoundResult(msg);}
     else if(type==='KAN_DORA'){
+      // ★ Sev中: 強制完全上書き同期 + 視聴覚通知
       doraIndicators=[...msg.doraIndicators];
       uraDoraIndicators=[...msg.uraDoraIndicators];
       // ★ ゲスト側のデッキ同期: ホストがカンドラ用にpopした分を消費
-      const prevLen=doraIndicators.length-1; // 今回追加分
       if(this.eng.deck.length>0)this.eng.deck.pop(); // ドラ表示牌分
       if(this.eng.deck.length>0)this.eng.deck.pop(); // 裏ドラ分
-      this.eng._render();if(this.eng._hintOn)this.eng._renderHint();
-      this.eng.log('🎴 カンドラ追加','imp');
+      this.eng._render();
+      this.eng._rHdr&&this.eng._rHdr(); // ★ ヘッダ強制再描画 (ドラ表示)
+      if(this.eng._hintOn)this.eng._renderHint();
+      try{SFX.dora&&SFX.dora();}catch(e){} // ★ ドラ通知音
+      // ★ ヘッダの新ドラを一瞬光らせる
+      const dte=document.getElementById('dora-hdr-tile');
+      if(dte){dte.style.animation='doraShine 1.2s ease-out';setTimeout(()=>dte.style.animation='',1300);}
+      this.eng.log('🎴 カンドラ追加！'+CHARS[(doraIndicators[doraIndicators.length-1].char+1)%N_CHARS]+doraIndicators[doraIndicators.length-1].num,'imp');
     }
     else if(type==='NEXT_ROUND'){this.eng._onNextRound(msg);}
     else if(type==='GAME_OVER'){this.eng._onGameOver(msg);}
@@ -1198,6 +1696,25 @@ class GameEngine{
   }
   _disarmNetWd(){if(this._netWd){clearTimeout(this._netWd);this._netWd=null;}}
   _findRD(hand,melds){let best={idx:-1,waiting:[]};for(let i=0;i<hand.length;i++){const w=tenpai(hand.filter((_,j)=>j!==i),melds);if(w.length>best.waiting.length)best={idx:i,waiting:w};}return best;}
+
+  // ━━ リーチBGM 制御 ━━
+  startReachBGM(){
+    ReachBGM.start();
+    document.body.classList.add('reach-bgm-on');
+    this._tickReachBgmTempo();
+  }
+  stopReachBGM(){
+    ReachBGM.stop();
+    document.body.classList.remove('reach-bgm-on');
+  }
+  _tickReachBgmTempo(){
+    if(!ReachBGM.isRunning())return;
+    // 山牌が少ないほど速く: 80 → 140bpm
+    const total=Math.max(1,(N_PL-1)*N_INIT+30); // 大体の概算
+    const remain=this.deck?this.deck.length:total;
+    const ratio=1-Math.max(0,Math.min(1,remain/total));
+    ReachBGM.setBpm(80+ratio*60);
+  }
 
   // ── ヒント ──
   toggleHint(){
@@ -1494,7 +2011,10 @@ class GameEngine{
 
   netStart(){
     if(!this.net.isHost)return;
+    if(this._netStartLock)return; // ★ Sev中: 連打ロック
     if(this.net.lobby.length<this.net.minPlayers){alert(`あと${this.net.minPlayers-this.net.lobby.length}人必要です`);return;}
+    this._netStartLock=true;
+    const _btn=document.getElementById('btn-start');if(_btn)_btn.disabled=true;
     const seed=Math.floor(Math.random()*0xffffffff);
     this.gameMode=document.getElementById('sel-mode').value||'east';
     const fullPlayers=this.net._buildLobbyWithCpu();
@@ -1612,6 +2132,8 @@ class GameEngine{
 
   _startRound(seed){
     this._clrT();this._clrGuard();this._roundEndGuard=false;
+    this.stopReachBGM&&this.stopReachBGM(); // ★ 新ラウンド: BGM強制停止
+    MEGA_FX.clear&&MEGA_FX.clear();
     this.state='IDLE'; // ★ ROUND_END/GAME_END のまま _advanceTurn が即リターンするのを防ぐ
     this._discardSeq=0;this._disarmNetWd(); // ★ シーケンスとウォッチドッグをリセット
     this._pendingGameOver=false;this._pendingFinalData=null; // ★ 最終結果フラグリセット
@@ -1663,10 +2185,12 @@ class GameEngine{
     if(!this.deck.length){this._drawGame();return;}
     const p=this._h();const tile=this.deck.pop();
     p.hand.push(tile);
+    p.tempFuriten=false; // ★ 自分のドロー = 巡が回ってきた → 同巡フリテン解除
     if(!p.isReach){p.sortHand();p.selIdx=p.hand.indexOf(tile);if(p.selIdx<0)p.selIdx=p.hand.length-1;}else p.selIdx=p.hand.length-1;
     p.firstDraw=false;
     // ★ リーチ中のドローではippatsuを消さない (ツモで一発上がり可能)
     this.log(`🀄 ${tile} を引きました`);SFX.draw();
+    this._tickReachBgmTempo&&this._tickReachBgmTempo(); // ★ BGM加速
     this.state='DISCARD';this._render();
     // ★ ドロー時スパーク
     setTimeout(()=>{const el=document.querySelector('#hd-bot .tile.drawn');if(el){const r=el.getBoundingClientRect();FX.discSpark(r.left+r.width/2,r.top+4);}},80);
@@ -1678,8 +2202,24 @@ class GameEngine{
     const p=this._h();
     if(p.selIdx<0||p.selIdx>=p.hand.length){this.log('⚠ 捨てる牌を選んでください','err');return;}
     if(p.isReach&&p.selIdx!==p.hand.length-1){this.log('⚠ リーチ後は引いた牌のみ','err');p.selIdx=p.hand.length-1;this._render();return;}
-    if(p.pendingReach&&!p.validReachIdx.includes(p.selIdx)){this.log('⚠ その牌ではテンパイになれません','err');return;}
+    if(p.pendingReach&&!p.validReachIdx.includes(p.selIdx)){
+      this.log('⚠ その牌ではテンパイになれません — 有効牌に戻します','err');
+      // ★ Sev高: フォールバック — selIdxを有効牌の先頭にリセット
+      if(p.validReachIdx.length>0){p.selIdx=p.validReachIdx[0];this._render();}
+      return;
+    }
     this._doDiscard(p,p.selIdx);
+  }
+  cancelReach(){
+    // ★ Sev中: pendingReach状態のキャンセル (確定前のみ)
+    if(this.state!=='DISCARD'||!this._isMyTurn())return;
+    const p=this._h();
+    if(!p.pendingReach||p.isReach)return;
+    p.pendingReach=false;p.validReachIdx=[];p.isDoubleReach=false;
+    p.selIdx=p.hand.length-1;
+    this.log('↩ リーチ宣言を取消しました','imp');
+    this._render();
+    if(this._hintOn)this._renderHint();
   }
   actReach(){
     if(this.state!=='DISCARD'||!this._isMyTurn())return;
@@ -1688,7 +2228,7 @@ class GameEngine{
     if(!valid.length){this.log('⚠ テンパイになれる捨て牌がありません','err');return;}
     p.pendingReach=true;p.validReachIdx=valid;const best=this._findRD(p.hand,p.melds);p.selIdx=best.idx;
     if(p.discards.length===0)p.isDoubleReach=true;
-    this.log('🔥 リーチ宣言！','reach');SFX.reach();FX.reach();this._render();
+    this.log('🔥 リーチ宣言！','reach');SFX.reach();FX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this._render();
     if(this._hintOn)this._renderHint();
   }
   actTsumo(){
@@ -1697,7 +2237,8 @@ class GameEngine{
     const ctx={isReach:p.isReach,isDoubleReach:p.isDoubleReach||false,isTsumo:true,ippatsu:p.ippatsu,isHaitei:this.deck.length===0,isRinshan:p.justPonned,isChiiho:!p.firstDraw&&p.discards.length===0&&p.melds.length===0&&this.players.every(q=>q.discards.length===0)};
     const yaku=yakuDetect(p.hand,res,p.melds,ctx);
     if(!validWin(yaku,true)){this.log('⚠ 役がありません','err');return;}
-    SFX.win();FX.tsumo();const{deltas}=calcPts(yaku,this.honba,p.idx,-1,true,this.dealerIdx);
+    const _hanT=yaku.reduce((s,y)=>s+y.han,0);
+    SFX.win();FX.tsumo();MEGA_FX.tsumo(yaku,_hanT);this.stopReachBGM&&this.stopReachBGM();const{deltas}=calcPts(yaku,this.honba,p.idx,-1,true,this.dealerIdx);
     if(this.isOnline)this._send({type:'ACT',act:'TSUMO',pi:this.mySlot,yaku,mentsu:[...res.mentsu,...p.melds],deltas});
     this._endRound(p,'ツモ',yaku,[...res.mentsu,...p.melds],p.hand[p.hand.length-1],deltas);
   }
@@ -1707,10 +2248,11 @@ class GameEngine{
     const hand=[...p.hand,this.lastDiscard];const res=checkWin(hand,p.melds);
     const ctx={isReach:p.isReach,isDoubleReach:p.isDoubleReach||false,isTsumo:false,ippatsu:p.ippatsu,isHoutei:this.deck.length===0};
     const yaku=yakuDetect(hand,res,p.melds,ctx);
-    if(!validWin(yaku,false)){this.log('⚠ 役なし — 見送り','err');if(this.lastDiscard){p.genbutsu.add(this.lastDiscard.char*10+this.lastDiscard.num);p.addSafe(this.lastDiscard);}this._chkCpuRon();return;}
+    if(!validWin(yaku,false)){this.log('⚠ 役なし — 見送り','err');if(this.lastDiscard){p.genbutsu.add(this.lastDiscard.char*10+this.lastDiscard.num);p.addSafe(this.lastDiscard);}p.tempFuriten=true;this._chkCpuRon();return;}
     const winData={player:p,hand,yaku,mentsu:[...res.mentsu,...p.melds],loserIdx:this.lastDiscardFrom,winTile:this.lastDiscard};
     this._ronWinners.push(winData);
-    FX.ron();
+    const _hanR=yaku.reduce((s,y)=>s+y.han,0);
+    FX.ron();MEGA_FX.ron(yaku,_hanR);this.stopReachBGM&&this.stopReachBGM();
     if(this.isOnline)this._send({type:'ACT',act:'RON',pi:this.mySlot,yaku,mentsu:winData.mentsu,loserIdx:this.lastDiscardFrom,winTile:this.lastDiscard.toJ(),seq:this._discardSeq});
     // タイマーを止めずに他のRON宣言も待つ (200ms猶予)
     if(this._ronResolveTid)clearTimeout(this._ronResolveTid);
@@ -1725,8 +2267,15 @@ class GameEngine{
   actKan(){
     const p=this._h();
     if(this.state==='PON_WAIT'&&p.canDaiminKan(this.lastDiscard)){
+      // ★ Sev高: ロン宣言と競合する場合は ron 優先 (ロン候補がいるなら KAN を即座にしない)
+      if(this._ronWinners&&this._ronWinners.length>0){
+        this.log('⚠ ロンが優先されます — カンは保留','err');
+        return;
+      }
       const kanTile=this.lastDiscard;
       const kanSeq=this._discardSeq;
+      // ★ ron猶予タイマーは clrT より先に明示クリア (誤って _clrT が消す前に保護)
+      if(this._ronResolveTid){clearTimeout(this._ronResolveTid);this._ronResolveTid=null;}
       this._clrT();
       if(this.isOnline){
         // ★ ゲスト→ホストへ: PON_SKIP+KAN の順で送信
@@ -1875,7 +2424,7 @@ class GameEngine{
       if(idx>=0)p.hand.splice(idx,1);else if(p.hand.length)p.hand.pop();
       p.discards.push(tile);p.selIdx=-1;
       if(msg.seq)this._discardSeq=msg.seq; // ★ シーケンス番号を同期
-      if(msg.isReach&&!p.isReach){const wt=tenpai(p.hand,p.melds);p.isReach=true;p.ippatsu=true;p.waiting=wt;this.log(p.name+': リーチ！','reach');SFX.reach();}
+      if(msg.isReach&&!p.isReach){const wt=tenpai(p.hand,p.melds);p.isReach=true;p.ippatsu=true;p.waiting=wt;this.log(p.name+': リーチ！','reach');SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();}
       if(msg.isDR)p.isDoubleReach=true;
       p.pendingReach=false;p.justPonned=false;p.upWait();if(!p.isReach)p.ippatsu=false;
       this.lastDiscard=tile;this.lastDiscardFrom=pi;
@@ -1891,7 +2440,8 @@ class GameEngine{
       SFX.win();
       let deltas=msg.deltas;
       if(!deltas){const r=calcPts(msg.yaku,this.honba,pi,-1,true,this.dealerIdx);deltas=r.deltas;}
-      FX.tsumo();
+      const _hanNT=(msg.yaku||[]).reduce((s,y)=>s+y.han,0);
+      FX.tsumo();MEGA_FX.tsumo(msg.yaku||[],_hanNT);this.stopReachBGM&&this.stopReachBGM();
       const winTile=p.hand.length>0?p.hand[p.hand.length-1]:null;
       this._endRound(p,'ツモ',msg.yaku,msg.mentsu,winTile,deltas);
     }
@@ -1942,7 +2492,8 @@ class GameEngine{
     if(p.pendingReach){const wt=tenpai(p.hand,p.melds);if(wt.length>0){p.isReach=true;p.ippatsu=true;p.waiting=wt;isReach=true;isDR=p.isDoubleReach||false;this.log('🔥 リーチ確定！待ち:'+wt.map(w=>CHARS[w.char]+w.num).join(''),'reach');}else this.log('⚠ リーチ取消','err');p.pendingReach=false;p.validReachIdx=[];}
     p.justPonned=false;p.upWait();
     if(p.waiting.length){const was=p.furiten;p.furiten=p.discards.some(d=>p.waiting.some(w=>w.char===d.char&&w.num===d.num));if(p.furiten&&!was&&p.idx===this.mySlot)this.log('⚠ フリテン！','err');}else p.furiten=false;
-    // ippatsu は除外済み。非リーチ者はippatsu=falseのまま
+    // ★ Sev低: 一発役 - リーチ宣言以外の捨て牌 (=2巡目以降) ではリーチ者のippatsuを消す
+    if(p.isReach&&!isReach)p.ippatsu=false;
     this.lastDiscard=tile;this.lastDiscardFrom=p.idx;this.log(p.name+': '+tile+' 捨て');SFX.disc();
     if(p.idx===this.mySlot){
       // ★ 自分の捨て牌スパーク
@@ -1962,6 +2513,12 @@ class GameEngine{
       },0);
     }
     if(this.isOnline&&p.idx===this.mySlot)this._send({type:'ACT',act:'DISCARD',pi:p.idx,tile:tile.toJ(),isReach,isDR,seq:this._discardSeq});
+    // ★ Sev高: 四家立直判定 (4人全員リーチで即流局)
+    if(this.players.every(q=>q.isReach)){
+      this.log('🚨 四家立直 — 流局','imp');
+      setTimeout(()=>this._drawGame('四家立直'),900);
+      return;
+    }
     this._afterDiscard();
     // ★ ポン/カンで一発消失 (鳴き発生時はippatsuをクリア)
     // 捨て牌では他プレイヤーのippatsuを消さない (リーチ者は次の自分のターンまで一発有効)
@@ -1986,6 +2543,7 @@ class GameEngine{
             this._clrT();
             if(this.state==='RON_WAIT'&&captureSeq===this._discardSeq){
               if(this.lastDiscard){me.genbutsu.add(this.lastDiscard.char*10+this.lastDiscard.num);me.addSafe(this.lastDiscard);}
+              me.tempFuriten=true; // ★ 同巡フリテン
               this.log('ロン見送り');
               if(this.isOnline&&!this.net.isHost){
                 // ★ ゲスト: タイムアウト後もホストの RON_SKIP を待つ
@@ -2065,6 +2623,10 @@ class GameEngine{
     const count=this._ronWinners.length;
     if(count>=2){
       SFX.multiRon();
+      const _allYaku=[].concat(...this._ronWinners.map(w=>w.yaku));
+      const _hanMR=_allYaku.reduce((s,y)=>s+y.han,0);
+      MEGA_FX.ron(_allYaku,_hanMR);
+      this.stopReachBGM&&this.stopReachBGM();
       const label=count===3?'トリプルロン！🎊🎊🎊':'ダブルロン！🎊🎊';
       this.log(`🎉 ${label}`,'win');
       const loserIdx=this._ronWinners[0].loserIdx;
@@ -2096,6 +2658,11 @@ class GameEngine{
       // シングルロン
       FX.ron();
       const w=this._ronWinners[0];
+      const _hanSR=w.yaku.reduce((s,y)=>s+y.han,0);
+      // ★ 自分以外 (CPU or 他ネット) のロン: 演出はここで発火
+      //    自分のロンは actRon で既に発火済みのためスキップ
+      if(w.player.idx!==this.mySlot)MEGA_FX.ron(w.yaku,_hanSR);
+      this.stopReachBGM&&this.stopReachBGM();
       this._ronWinners=[];
       w.player.hand=w.hand;
       const{deltas}=calcPts(w.yaku,this.honba,w.player.idx,w.loserIdx,false,this.dealerIdx);
@@ -2135,12 +2702,15 @@ class GameEngine{
 
   _chkCpuPon(){
     if(this._roundEndGuard)return;
+    // ★ Sev高: KAN実行前にロン候補の最終確認 (誰か1人でもロン可能なら KAN をスキップ)
+    const _canAnyoneRon=this.lastDiscard&&this.players.some(q=>q.idx!==this.lastDiscardFrom&&q.canWinWith(this.lastDiscard));
     // ★ ゲストはCPUポンを実行しない
     if(!this.isOnline||this.net.isHost){
       for(let i=1;i<N_PL;i++){
         const p=this.players[(this.lastDiscardFrom+i)%N_PL];
         if(p.idx===this.lastDiscardFrom||(!p.isCpuFill&&p.isNet)||!p.ai)continue;
-        if(p.canDaiminKan(this.lastDiscard)&&Math.random()<0.5){
+        // ★ 誰かロン可能なら KAN をスキップ (ロン優先)
+        if(p.canDaiminKan(this.lastDiscard)&&!_canAnyoneRon&&Math.random()<0.5){
           if(this.isOnline&&this.net.isHost){
             // ★ KAN broadcast 前に PON_SKIP を送信してゲストをKANフェーズに同期
             const capSeq=this._discardSeq;
@@ -2204,7 +2774,8 @@ class GameEngine{
     if(res){const ctx={isReach:false,isTsumo:true,ippatsu:false,isRinshan:p.justPonned};const yaku=yakuDetect(p.hand,res,p.melds,ctx);if(validWin(yaku,true)){SFX.win();const{deltas}=calcPts(yaku,this.honba,p.idx,-1,true,this.dealerIdx);
       // ★ CPU TSUMO(rinshan) broadcast
       if(this.isOnline&&this.net.isHost)this.net.broadcast({type:'ACT',act:'TSUMO',pi:p.idx,yaku,mentsu:[...res.mentsu,...p.melds],deltas});
-      FX.tsumo();
+      const _hanCT=yaku.reduce((s,y)=>s+y.han,0);
+      FX.tsumo();MEGA_FX.tsumo(yaku,_hanCT);this.stopReachBGM&&this.stopReachBGM();
       this._endRound(p,'ツモ',yaku,[...res.mentsu,...p.melds],p.hand[p.hand.length-1],deltas);return;}}
     const dIdx2=(()=>{const{idx}=p.ai.bestDiscard(p.hand,p.melds,this.deck,this.players,p.idx);return idx>=0?idx:p.hand.length-1;})();
     this._doDiscard(p,dIdx2);
@@ -2236,10 +2807,12 @@ class GameEngine{
     if(dec.action==='WIN'){SFX.win();const{deltas}=calcPts(dec.yaku,this.honba,p.idx,-1,true,this.dealerIdx);
       // ★ CPU TSUMO broadcast
       if(this.isOnline&&this.net.isHost)this.net.broadcast({type:'ACT',act:'TSUMO',pi:p.idx,yaku:dec.yaku,mentsu:dec.mentsu,deltas});
+      const _hanCT2=(dec.yaku||[]).reduce((s,y)=>s+y.han,0);
+      MEGA_FX.tsumo(dec.yaku||[],_hanCT2);this.stopReachBGM&&this.stopReachBGM();
       this._endRound(p,'ツモ',dec.yaku,dec.mentsu,p.hand[p.hand.length-1],deltas);return;}
     if(dec.action==='REACH'&&!p.melds.length){
       const sub=p.hand.filter((_,j)=>j!==dec.idx);const w=tenpai(sub,p.melds);
-      if(w.length>0){p.isReach=true;p.ippatsu=true;p.waiting=w;SFX.reach();this.log(p.name+': リーチ！','reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
+      if(w.length>0){p.isReach=true;p.ippatsu=true;p.waiting=w;SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this.log(p.name+': リーチ！','reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
         this._discardSeq++;
         // ★ CPU DISCARD(reach) broadcast
         if(this.isOnline&&this.net.isHost){
@@ -2265,6 +2838,7 @@ class GameEngine{
     if(this._roundEndGuard)return;  // 二重発火防止
     this._roundEndGuard=true;
     this._clrT();this._clrGuard();
+    this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
     this.state='ROUND_END';         // ★ 必ず ROUND_END に設定
 
     let aDeltas=deltas;
@@ -2315,31 +2889,57 @@ class GameEngine{
     },2500); // ★ 2500msに延長して得点確認時間を確保
   }
 
-  _drawGame(){
+  _drawGame(reason){
     if(this._roundEndGuard)return;this._roundEndGuard=true;
-    this._clrT();this._clrGuard();this.state='ROUND_END';this.log('流局','imp');
-    this.dealerDone[this.dealerIdx]++;this.honba=0;this.dealerIdx=(this.dealerIdx+1)%N_PL;
+    this._clrT();this._clrGuard();
+    this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
+    MEGA_FX.clear&&MEGA_FX.clear();
+    this.state='ROUND_END';
+    const reasonLabel=reason||'流局';
+    this.log('🏳 '+reasonLabel,'imp');
+    // ★ Sev高: テンパイ料 (ノーテン罰符) 計1500点折半
+    //   4人麻雀: テンパイ者数で割り、ノーテン者から徴収
+    const tenpaiPlayers=this.players.filter(p=>p.waiting&&p.waiting.length>0&&!p.melds.find(m=>!m.open)||p.isReach||p.waiting.length>0);
+    const tFlags=this.players.map(p=>p.waiting&&p.waiting.length>0);
+    const tCount=tFlags.filter(Boolean).length;
+    const ntCount=N_PL-tCount;
+    const tDeltas=new Array(N_PL).fill(0);
+    if(tCount>0&&ntCount>0&&reasonLabel==='流局'){
+      // 通常流局のみテンパイ料、特殊流局は罰符なし
+      const TENPAI_POOL=15; // ★ 各ノーテンが支払う合計÷ノーテン人数 ベース
+      const perNT=Math.floor(15/ntCount); // ノーテン1人あたりの支払い
+      const perT=Math.floor(15/tCount);   // テンパイ1人あたりの受取
+      this.players.forEach((p,i)=>{
+        if(tFlags[i])tDeltas[i]=perT; else tDeltas[i]=-perNT;
+        p.score+=tDeltas[i];this._scores[i]=p.score;
+      });
+      this.log(`📊 テンパイ料: ${this.players.map((p,i)=>(tFlags[i]?'⭕':'❌')+p.name+(tDeltas[i]>=0?'+':'')+tDeltas[i]).join(' ')}`,'pts');
+    }
+    // ★ 親流れ: テンパイなら親継続(本場+1)、ノーテン or 特殊流局なら親流れ
+    const dealerTenpai=tFlags[this.dealerIdx]&&reasonLabel==='流局';
+    if(dealerTenpai&&this.honba<MAX_HONBA){this.honba++;this.log('👑 親テンパイ連荘 本場'+this.honba,'pts');}
+    else{this.dealerDone[this.dealerIdx]++;this.honba=0;this.dealerIdx=(this.dealerIdx+1)%N_PL;}
     this._render();
     // ★ ホストが流局を全ゲストに通知
     if(this.isOnline&&this.net.isHost){
       this.players.forEach((p2,i)=>{this._scores[i]=p2.score;});
-      this.net.broadcast({type:'ROUND_RESULT',winnerIdx:-1,winType:'流局',yaku:[],mentsu:[],
-        deltas:null,han:0,winTile:null,scores:this._scores.slice(),
+      this.net.broadcast({type:'ROUND_RESULT',winnerIdx:-1,winType:reasonLabel,yaku:[],mentsu:[],
+        deltas:tDeltas,han:0,winTile:null,scores:this._scores.slice(),
         dealerDone:[...this.dealerDone],dealerIdx:this.dealerIdx,honba:this.honba
       });
     }
     const isGameOver=this._isGameOver();
     if(isGameOver){
       this._pendingGameOver=true;
-      this._pendingFinalData={deltas:null,winnerIdx:-1,type:'流局',han:0};
+      this._pendingFinalData={deltas:tDeltas,winnerIdx:-1,type:reasonLabel,han:0};
       if(this.isOnline&&this.net.isHost){
         this.players.forEach((p,i)=>{this._scores[i]=p.score;});
-        this.net.broadcast({type:'GAME_OVER',scores:this._scores.slice(),dealerDone:[...this.dealerDone],honba:this.honba,roundNum:this.roundNum,lastDeltas:null,lastWinnerIdx:-1,lastType:'流局',lastHan:0});
+        this.net.broadcast({type:'GAME_OVER',scores:this._scores.slice(),dealerDone:[...this.dealerDone],honba:this.honba,roundNum:this.roundNum,lastDeltas:tDeltas,lastWinnerIdx:-1,lastType:reasonLabel,lastHan:0});
       }
     }
     setTimeout(()=>{
       const btnTxt=isGameOver?'🏆 最終結果へ →':'次のラウンド ▶';
-      this._showOv('流局','次のラウンドへ',[],[],null,null,null,btnTxt);
+      this._showOv(reasonLabel,'次のラウンドへ',[],[],null,null,null,btnTxt);
     },2500);
   }
 
@@ -2602,7 +3202,11 @@ class GameEngine{
     document.getElementById('h-rd').textContent=this.roundNum;
     document.getElementById('h-dlr').textContent=this.players[this.dealerIdx]?.name||'-';
     document.getElementById('h-hn').textContent=this.honba;
-    document.getElementById('h-dk').textContent=this.deck.length;
+    const dkEl=document.getElementById('h-dk');
+    dkEl.textContent=this.deck.length;
+    // ★ 山牌警告: 10枚以下=warn(オレンジ), 5枚以下=danger(赤+点滅)
+    dkEl.classList.toggle('warn',this.deck.length<=10&&this.deck.length>5);
+    dkEl.classList.toggle('danger',this.deck.length<=5);
     document.getElementById('pot-rd').textContent='R'+this.roundNum;
     document.getElementById('pot-dk').textContent=this.deck.length;
     const dte=document.getElementById('dora-hdr-tile');
@@ -2660,7 +3264,21 @@ class GameEngine{
       else if(p.waiting.length>0&&(isMe||showAll))badges+='<span class="badge b-tenpai">テンパイ</span>';
       if(p.melds.length)badges+='<span class="badge b-furo">副露'+p.melds.length+'</span>';
       if(p.furiten&&isMe)badges+='<span class="badge" style="background:#555;color:#f88;border:1px solid #f88">フリテン</span>';
-      pnEl.innerHTML=p.name+badges;psEl.textContent=p.score+'点';psEl.className='pa-score'+(p.score<START_PT?' minus':'');
+      if(p.tempFuriten&&isMe&&!p.furiten)badges+='<span class="badge b-tempfuri">同巡フリテン</span>';
+      // ★ 捨て傾向バッジ (相手のみ、3枚以上捨ててから)
+      let discStat='';let discText='';
+      if(!isMe&&p.discards.length>=3){
+        const cnt={};p.discards.forEach(t=>{cnt[t.char]=(cnt[t.char]||0)+1;});
+        const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,2).filter(([,v])=>v>=2);
+        if(top.length){
+          discText='捨:'+top.map(([c,v])=>CHARS[c]+'×'+v).join(' ');
+          discStat=`<span class="disc-stat">${discText}</span>`;
+        }
+      }
+      // 左右・上パネルは専用ミニ枠に表示 (pa-nameが狭いため)
+      const dsEl=document.getElementById('ds-'+pos);
+      if(dsEl)dsEl.textContent=discText;
+      pnEl.innerHTML=p.name+badges+(pos==='top'?discStat:'');psEl.textContent=p.score+'点';psEl.className='pa-score'+(p.score<START_PT?' minus':'');
       mlEl.innerHTML='';
       p.melds.forEach(m=>{const g=document.createElement('div');g.className='meld-g';const lbl=document.createElement('span');lbl.className='meld-lbl';lbl.textContent=m.t==='K'?'カン':m.t==='k'?'刻':'順';g.appendChild(lbl);const tiles=m.t==='K'?[{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num}]:m.t==='k'?[{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num}]:[{c:m.char,n:m.num},{c:m.char,n:m.num+1},{c:m.char,n:m.num+2}];tiles.forEach((td,ti)=>{const t=document.createElement('div');t.className='tile open sz-sm'+(m.t==='K'&&!m.open&&(ti===0||ti===3)?' fd':'');const tf=document.createElement('span');tf.className='tf';tf.textContent=CHARS[td.c];const tn=document.createElement('span');tn.className='tn';tn.textContent=td.n;t.appendChild(tf);t.appendChild(tn);g.appendChild(t);});mlEl.appendChild(g);});
       const szCls=isMe?'sz-lg':'sz-md';const canSel=isMe&&this.state==='DISCARD'&&pidx===this.curIdx;
@@ -2681,6 +3299,11 @@ class GameEngine{
             else if(me.safeSet&&me.safeSet.has(tKey))cls.push('tsafe');
           }
           div.className=cls.join(' ');
+          // ★ 危険ヒートマップ (data-danger): 自分の手牌のみ
+          if(isMe&&canSel&&!cls.includes('locked')){
+            if(dset.has(tKey))div.dataset.danger='hi';
+            else if(me.safeSet&&me.safeSet.has(tKey))div.dataset.danger='safe';
+          }
           const tf=document.createElement('span');tf.className='tf';tf.textContent=tile.face;
           const tn=document.createElement('span');tn.className='tn'+(tile.num===AKA_NUM?' aka':'');tn.textContent=tile.num;
           div.appendChild(tf);div.appendChild(tn);
@@ -2711,6 +3334,9 @@ class GameEngine{
     if(s==='DISCARD'&&isMy&&!p.isReach&&!p.pendingReach&&!p.melds.length&&has_w)
       for(let i=0;i<p.hand.length;i++)if(tenpai(p.hand.filter((_,j)=>j!==i),p.melds).length>0){canReach=true;break;}
     E('btn-draw',s==='DRAW'&&isMy);E('btn-disc',s==='DISCARD'&&isMy&&p.selIdx>=0&&p.selIdx<p.hand.length&&!canTsumo);E('btn-reach',canReach);E('btn-tsumo',canTsumo);E('btn-ron',canRon);E('btn-pon',canPon);E('btn-kan',canKan);
+    // ★ Sev中: リーチ取消ボタン (pendingReach状態のみ表示)
+    const rcBtn=document.getElementById('btn-rcancel');
+    if(rcBtn){rcBtn.style.display=(s==='DISCARD'&&isMy&&p.pendingReach&&!p.isReach)?'inline-block':'none';}
     CLS('btn-tsumo','pulse',canTsumo);CLS('btn-ron','pulse',canRon);CLS('btn-pon','pulse',canPon);CLS('btn-kan','pulse',canKan);
     if(s==='DISCARD'&&p.selIdx>=0&&p.selIdx<p.hand.length){const sel=p.hand[p.selIdx];T('btn-disc',canTsumo?'(ツモ可)':sel.face+sel.num+' 捨て');}else T('btn-disc','捨てる');
     const stmap={
@@ -2729,7 +3355,18 @@ class GameEngine{
 
   _rScore(){
     const sorted=[...this.players].sort((a,b)=>b.score-a.score);const max=sorted[0]?.score||0;
-    document.getElementById('scoreboard').innerHTML=sorted.map(p=>`<div class="sc-row ${p.score===max&&max>0?'lead':''}"><span style="font-weight:bold">${p.name}${p.isCpuFill?' 🤖':''}${p.cpuType?` <span style="font-size:9px;color:#adf">${CPU_TYPE_LABEL[p.cpuType]}</span>`:''}${p.isReach?' 🔥':''}${this._isDlr(p)?' 👑':''}${p.isNet&&!p.isCpuFill?' 🌐':''}</span><span class="sc-pt ${p.score<START_PT?'minus':''}">${p.score}</span></div>`).join('');
+    const sumAbs=this.players.reduce((s,p)=>s+Math.abs(p.score-START_PT),0)||1;
+    const rows=sorted.map(p=>`<div class="sc-row ${p.score===max&&max>0?'lead':''}"><span style="font-weight:bold">${p.name}${p.isCpuFill?' 🤖':''}${p.cpuType?` <span style="font-size:9px;color:#adf">${CPU_TYPE_LABEL[p.cpuType]}</span>`:''}${p.isReach?' 🔥':''}${this._isDlr(p)?' 👑':''}${p.isNet&&!p.isCpuFill?' 🌐':''}</span><span class="sc-pt ${p.score<START_PT?'minus':''}">${p.score}</span></div>`).join('');
+    // ★ 戦績バー: スタートからの差分を視覚化
+    const bars=`<div id="score-bars">`+sorted.map(p=>{
+      const delta=p.score-START_PT;
+      const w=Math.min(100,Math.abs(delta)/sumAbs*100*2);
+      const isMe=p.idx===this.mySlot;
+      const cls=delta<0?'minus':(isMe?'me':'');
+      const dispCls=delta<0?'minus':(delta>0?'plus':'');
+      return `<div class="sb-row"><span class="sb-name">${p.name}${isMe?'(自)':''}</span><div class="sb-track"><div class="sb-fill ${cls}" style="width:${w}%"></div></div><span class="sb-pt ${dispCls}">${delta>0?'+':''}${delta}</span></div>`;
+    }).join('')+`</div>`;
+    document.getElementById('scoreboard').innerHTML=rows+bars;
   }
 
   log(msg,type=''){this.logs.push({msg,type});if(this.logs.length>100)this.logs.shift();const box=document.getElementById('logbox');const div=document.createElement('div');div.className='ll '+(type||'');div.textContent=msg;box.appendChild(div);box.scrollTop=box.scrollHeight;}
@@ -2741,6 +3378,10 @@ try{G=new GameEngine();}
 catch(e){console.error(e);document.body.innerHTML=`<div style="color:red;padding:30px;font-size:18px">❌ エラー: ${e.message}<br><small>${e.stack}</small></div>`;}
 </script>
 <div id="disc-fx"></div>
+<!-- ★ MEGA FX オーバーレイ (リーチ/ロン/ツモ ド派手化) -->
+<div id="mega-ov"></div>
+<canvas id="mega-canvas"></canvas>
+<div id="reach-vignette"></div>
 <!-- ★ アワードムービーオーバーレイ -->
 <div id="award-ov" onclick="G.closeAward()">
   <canvas id="aw-canvas"></canvas>
