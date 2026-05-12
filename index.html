@@ -533,6 +533,51 @@ body.shake #main{animation:screenShake .65s cubic-bezier(.36,.07,.19,.97) both}
   border:1px solid rgba(255,165,0,.3);border-radius:4px;padding:3px 7px;margin:3px 0}
 .badge.b-tempfuri{background:#a85;color:#ffe}
 
+/* ═══ スマホ専用レイアウト (767px以下) ═══ */
+@media(max-width:767px){
+  /* サイドバー非表示・フィールド全幅 */
+  #main{grid-template-columns:1fr}
+  #side{display:none}
+  /* ラッパー: 余白縮小・ボタン行を縮める */
+  #wrap{grid-template-rows:40px 1fr 58px;padding:2px;gap:2px}
+  /* テーブル: 画面縦から固定要素を引いた最大サイズ */
+  #tbl{width:min(100%,calc(100svh - 200px))}
+  /* ヘッダー圧縮 */
+  #hdr{padding:0 4px}
+  #hdr h1{font-size:13px}
+  .hd-info{font-size:9px;gap:4px}
+  .hd-btns{gap:2px}
+  .hd-btns .b-start{font-size:10px;padding:2px 4px}
+  /* 手牌タイル: 小さく (13枚が画面幅に収まるサイズ) */
+  .sz-lg{width:22px;height:30px}
+  .sz-lg .tf{font-size:11px}
+  .sz-lg .tn{font-size:7px}
+  .sz-lg.fd::before{font-size:10px}
+  /* 捨て牌タイル: 8枚がテーブル幅に収まるサイズ */
+  .dc-tile{width:16px;height:22px}
+  .dc-tile .tf{font-size:10px;line-height:1}
+  .dc-tile .tn{font-size:5px;margin-top:0}
+  /* 左右捨てゾーン: dc-row幅=回転後の視覚幅(16px→22px) */
+  #dz-left .dc-row,#dz-right .dc-row{width:22px}
+  /* margin補正: (22-16)/2=3px */
+  #dz-left .dc-tile{margin:-3px 0}
+  #dz-right .dc-tile{margin:-3px 0}
+  /* ポット小さく */
+  #pot{width:60px;height:60px}
+  .pot-n{font-size:13px}
+  .pot-r,.pot-l,.pot-h{font-size:6px}
+  /* 左右プレイヤーパネル: 幅を最小限に */
+  .p-side{padding:2px}
+  .p-side .pa-hdr{margin-bottom:1px}
+  .p-side .hand{gap:1px}
+  .pa-name{font-size:10px}
+  .pa-score{font-size:9px}
+  /* ゲームボタン: コンパクト・折り返し可 */
+  #ctrl{padding:1px 2px}
+  .abts{gap:2px;flex-wrap:wrap;justify-content:center}
+  .abts button{font-size:10px;padding:4px 6px}
+  #status{font-size:9px;text-align:center}
+}
 </style>
 </head>
 <body>
