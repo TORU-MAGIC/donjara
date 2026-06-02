@@ -32,6 +32,28 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(ellipse 
 .b-cpu{background:#555;color:#adf}.b-atk{background:#c0392b;color:#fff}
 .b-cau{background:#2980b9;color:#fff}.b-nml{background:#27ae60;color:#fff}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+/* ═══ 霊獣アバター＆感情リアクション ═══ */
+.pa-av{position:relative;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3a5a44,#143020);border:2px solid rgba(255,215,0,.45);flex-shrink:0;box-shadow:0 2px 5px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.2);transition:border-color .2s,box-shadow .2s}
+.pa-av .av-face{font-size:20px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.pa-av .av-mood{position:absolute;top:-7px;right:-7px;font-size:13px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.p-side .pa-av{width:30px;height:30px}.p-side .pa-av .av-face{font-size:17px}
+.pa-av.av-active{border-color:#ff8a8a;box-shadow:0 0 12px rgba(255,120,120,.7),inset 0 1px 2px rgba(255,255,255,.2);animation:avBob .9s ease-in-out infinite}
+@keyframes avBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.pa-av.av-reach{border-color:#ff3b3b;box-shadow:0 0 15px rgba(255,60,60,.85);animation:avReach .45s ease-in-out infinite}
+@keyframes avReach{0%,100%{transform:rotate(-5deg) scale(1)}50%{transform:rotate(5deg) scale(1.07)}}
+.pa-av.av-tenpai{border-color:#ffd700;box-shadow:0 0 12px rgba(255,215,0,.6)}
+.pa-av.av-win{border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,.95);animation:avWin .6s cubic-bezier(.17,.67,.35,1.2) infinite}
+@keyframes avWin{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-9px) scale(1.14) rotate(-6deg)}60%{transform:translateY(0) scale(1)}}
+.pa-av.av-lose{border-color:#888;filter:grayscale(.55) brightness(.8);animation:avLose .4s ease-in-out 3}
+@keyframes avLose{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
+.pa-bubble{position:absolute;left:-4px;top:-7px;transform:translateY(-100%);transform-origin:left bottom;z-index:30;background:linear-gradient(160deg,#fff,#ffe6a0);color:#7a2e00;font-weight:900;font-size:13px;white-space:nowrap;padding:5px 13px;border-radius:14px;border:2px solid #ff8c00;box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:none;animation:bubblePop .28s cubic-bezier(.17,.67,.35,1.35) both}
+.pa-bubble::after{content:'';position:absolute;left:15px;bottom:-8px;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #ff8c00}
+@keyframes bubblePop{0%{opacity:0;transform:translateY(-55%) scale(.3)}100%{opacity:1;transform:translateY(-100%) scale(1)}}
+.pa-bubble.out{animation:bubbleOut .3s ease-in forwards}
+@keyframes bubbleOut{to{opacity:0;transform:translateY(-135%) scale(.8)}}
+/* 右端プレイヤーのみ右基点(画面右の見切れ防止) */
+#pa-right .pa-bubble{left:auto;right:-4px;transform-origin:right bottom}
+#pa-right .pa-bubble::after{left:auto;right:15px}
 .melds-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
 .meld-g{display:flex;gap:2px;padding:2px 4px;background:rgba(255,255,255,.07);border-radius:4px;border:1px solid rgba(255,255,255,.15);align-items:flex-end}
 .meld-lbl{font-size:8px;color:#88f;margin-right:2px;line-height:1;align-self:flex-end}
@@ -607,17 +629,17 @@ body.shake #main{animation:screenShake .65s cubic-bezier(.36,.07,.19,.97) both}
 </div>
 <div id="main">
 <div id="field">
-  <div class="pa" id="pa-top"><div class="pa-hdr"><span class="pa-name" id="pn-top">待機中</span><span class="pa-score" id="ps-top">300</span></div><div class="disc-stat-mini" id="ds-top"></div><div class="hand" id="hd-top"></div><div class="melds-row" id="ml-top"></div></div>
+  <div class="pa" id="pa-top"><div class="pa-hdr"><span class="pa-av" id="av-top"><span class="av-face"></span><span class="av-mood"></span></span><span class="pa-name" id="pn-top">待機中</span><span class="pa-score" id="ps-top">300</span></div><div class="disc-stat-mini" id="ds-top"></div><div class="hand" id="hd-top"></div><div class="melds-row" id="ml-top"></div></div>
   <div id="mid-row">
-    <div class="p-side pa" id="pa-left"><div class="pa-hdr"><span class="pa-name" id="pn-left">待機中</span><span class="pa-score" id="ps-left">300</span></div><div class="disc-stat-mini" id="ds-left"></div><div class="hand" id="hd-left"></div><div class="melds-row" id="ml-left"></div></div>
+    <div class="p-side pa" id="pa-left"><div class="pa-hdr"><span class="pa-av" id="av-left"><span class="av-face"></span><span class="av-mood"></span></span><span class="pa-name" id="pn-left">待機中</span><span class="pa-score" id="ps-left">300</span></div><div class="disc-stat-mini" id="ds-left"></div><div class="hand" id="hd-left"></div><div class="melds-row" id="ml-left"></div></div>
     <div id="tbl"><div id="tbl-inner">
       <div class="dz" id="dz-top"></div><div class="dz" id="dz-left"></div>
       <div id="dz-mid"><div id="pot"><div class="pot-r" id="pot-rd">R0</div><div class="pot-n" id="pot-dk">🀄</div><div class="pot-l">残り</div><div class="pot-h" id="pot-hn"></div></div></div>
       <div class="dz" id="dz-right"></div><div class="dz" id="dz-bot"></div>
     </div></div>
-    <div class="p-side pa" id="pa-right"><div class="pa-hdr"><span class="pa-name" id="pn-right">待機中</span><span class="pa-score" id="ps-right">300</span></div><div class="disc-stat-mini" id="ds-right"></div><div class="hand" id="hd-right"></div><div class="melds-row" id="ml-right"></div></div>
+    <div class="p-side pa" id="pa-right"><div class="pa-hdr"><span class="pa-av" id="av-right"><span class="av-face"></span><span class="av-mood"></span></span><span class="pa-name" id="pn-right">待機中</span><span class="pa-score" id="ps-right">300</span></div><div class="disc-stat-mini" id="ds-right"></div><div class="hand" id="hd-right"></div><div class="melds-row" id="ml-right"></div></div>
   </div>
-  <div class="pa" id="pa-bot"><div class="pa-hdr"><span class="pa-name" id="pn-bot">あなた</span><span class="pa-score" id="ps-bot">300</span></div><div class="melds-row" id="ml-bot"></div><div class="hand" id="hd-bot"></div></div>
+  <div class="pa" id="pa-bot"><div class="pa-hdr"><span class="pa-av" id="av-bot"><span class="av-face"></span><span class="av-mood"></span></span><span class="pa-name" id="pn-bot">あなた</span><span class="pa-score" id="ps-bot">300</span></div><div class="melds-row" id="ml-bot"></div><div class="hand" id="hd-bot"></div></div>
 </div>
 <div id="side">
   <div class="panel"><h3>🏆 スコア</h3><div id="scoreboard"></div></div>
@@ -753,6 +775,7 @@ body.shake #main{animation:screenShake .65s cubic-bezier(.36,.07,.19,.97) both}
 <script>
 'use strict';
 const CHARS=['🐱','🐶','🐰','🐸','🐧','🐨','🦁','🐯'];
+const PLAYER_AV=['🦊','🐼','🐵','🐻']; // ★ プレイヤーアバター(牌の動物と区別)
 const N_CHARS=8,N_NUMS=5,COPIES=4,N_PL=4;
 const N_INIT=10,N_WIN=11,START_PT=300; // ★ N_NUMS=5(1-4が4枚,5は赤五で1枚)
 const AKA_NUM=5,AKA_COPIES=2; // ★ 赤五: 各キャラ2枚 (144牌)
@@ -2300,7 +2323,7 @@ class GameEngine{
     if(!valid.length){this.log('⚠ テンパイになれる捨て牌がありません','err');return;}
     p.pendingReach=true;p.validReachIdx=valid;const best=this._findRD(p.hand,p.melds);p.selIdx=best.idx;
     if(p.discards.length===0)p.isDoubleReach=true;
-    this.log('🔥 リーチ宣言！','reach');SFX.reach();FX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this._render();
+    this.log('🔥 リーチ宣言！','reach');SFX.reach();FX.reach();MEGA_FX.reach();this.react(p.idx,p.isDoubleReach?'Wリーチ！':'リーチ！');this.startReachBGM&&this.startReachBGM();this._render();
     if(this._hintOn)this._renderHint();
   }
   actTsumo(){
@@ -2840,7 +2863,7 @@ class GameEngine{
     this.lastDiscard=null;this.lastDiscardFrom=-1;
     // ★ ポン発生 → 全員の一発消失
     this.players.forEach(q=>{q.ippatsu=false;});
-    this.log(p.name+': '+CHARS[tile.char]+tile.num+' ポン！','imp');SFX.pon();if(p.idx===this.mySlot)FX.pon();
+    this.log(p.name+': '+CHARS[tile.char]+tile.num+' ポン！','imp');SFX.pon();if(p.idx===this.mySlot)FX.pon();this.react(p.idx,'ポン！');
     this.curIdx=p.idx;p.selIdx=-1;p.upWait();p.justPonned=true;
     if(p.idx===this.mySlot)this.state='DISCARD';
     else if(p.isCpuFill||(!p.isNet&&p.ai))this.state='CPU';
@@ -2897,7 +2920,7 @@ class GameEngine{
       this._endRound(p,'ツモ',dec.yaku,dec.mentsu,p.hand[p.hand.length-1],deltas);return;}
     if(dec.action==='REACH'&&!p.melds.length){
       const sub=p.hand.filter((_,j)=>j!==dec.idx);const w=tenpai(sub,p.melds);
-      if(w.length>0){if(p.discards.length===0)p.isDoubleReach=true;p.isReach=true;p.ippatsu=true;p.waiting=w;SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this.log(p.name+': '+(p.isDoubleReach?'ダブルリーチ！':'リーチ！'),'reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
+      if(w.length>0){if(p.discards.length===0)p.isDoubleReach=true;p.isReach=true;p.ippatsu=true;p.waiting=w;SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this.react(p.idx,p.isDoubleReach?'Wリーチ！':'リーチ！');this.log(p.name+': '+(p.isDoubleReach?'ダブルリーチ！':'リーチ！'),'reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
         this._discardSeq++;
         // ★ CPU DISCARD(reach) broadcast
         if(this.isOnline&&this.net.isHost){
@@ -2925,6 +2948,8 @@ class GameEngine{
     this._clrT();this._clrGuard();
     this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
     this.state='ROUND_END';         // ★ 必ず ROUND_END に設定
+    this._winnerIdx=winner.idx;     // ★ アバター演出用(勝者/放銃者)
+    this._dealInIdx=(type==='ロン')?this.lastDiscardFrom:-1;
 
     let aDeltas=deltas;
     if(!aDeltas){
@@ -2944,6 +2969,9 @@ class GameEngine{
     else{this.dealerDone[this.dealerIdx]++;this.honba=0;this.dealerIdx=(this.dealerIdx+1)%N_PL;}
 
     this._render();this._confetti();
+    // ★ アバターのセリフ (勝者→歓喜 / 放銃者→ガクッ)
+    this.react(winner.idx,type==='ツモ'?'ツモ！🀄':(type==='ロン'?'ロン！🎯':type+'！'));
+    if(this._dealInIdx>=0&&this._dealInIdx!==winner.idx)this.react(this._dealInIdx,'うわっ…！');
 
     // ★ ホストが全ゲストにラウンド結果を通知 (RON/TSUMOを受け取れなかったゲストの救済)
     if(this.isOnline&&this.net.isHost){
@@ -2980,6 +3008,7 @@ class GameEngine{
     this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
     MEGA_FX.clear&&MEGA_FX.clear();
     this.state='ROUND_END';
+    this._winnerIdx=-1;this._dealInIdx=-1; // ★ 流局は勝者なし(アバター演出クリア)
     const reasonLabel=reason||'流局';
     this.log('🏳 '+reasonLabel,'imp');
     // ★ Sev高: テンパイ料 (ノーテン罰符) 計1500点折半
@@ -3312,6 +3341,16 @@ class GameEngine{
 
   _seatMap(){const m=this.mySlot;return{bot:m,top:(m+2)%N_PL,left:(m+3)%N_PL,right:(m+1)%N_PL};}
 
+  // ★ リアクション吹き出し (アバター上にセリフをポンッと表示)
+  react(pidx,text){
+    const sm=this._seatMap();const pos=Object.keys(sm).find(k=>sm[k]===pidx);if(!pos)return;
+    const av=document.getElementById('av-'+pos);if(!av)return;
+    av.querySelectorAll('.pa-bubble').forEach(o=>o.remove());
+    const b=document.createElement('div');b.className='pa-bubble';b.textContent=text;
+    av.appendChild(b);
+    setTimeout(()=>{b.classList.add('out');setTimeout(()=>{if(b.parentNode)b.remove();},300);},1400);
+  }
+
   _rDisc(){
     const sm=this._seatMap();const pz={bot:'dz-bot',top:'dz-top',left:'dz-left',right:'dz-right'};
     for(const[pos,pidx]of Object.entries(sm)){
@@ -3363,6 +3402,25 @@ class GameEngine{
       const dsEl=document.getElementById('ds-'+pos);
       if(dsEl)dsEl.textContent=discText;
       pnEl.innerHTML=p.name+badges+(pos==='top'?discStat:'');psEl.textContent=p.score+'点';psEl.className='pa-score'+(p.score<START_PT?' minus':'');
+      // ★ 霊獣アバター＆感情ムード (見た目演出・ルールには非干渉)
+      const avEl=document.getElementById('av-'+pos);
+      if(avEl){
+        let avMood='',avBadge='';
+        if(this.state==='ROUND_END'||this.state==='GAME_END'){
+          if(pidx===this._winnerIdx){avMood='av-win';avBadge='🎉';}
+          else if(pidx===this._dealInIdx){avMood='av-lose';avBadge='💦';}
+        }
+        if(!avMood){
+          if(p.isReach||p.pendingReach){avMood='av-reach';avBadge='🔥';}
+          else if(pidx===this.curIdx&&!['ROUND_END','GAME_END','IDLE'].includes(this.state)){avMood='av-active';}
+          else if(p.waiting.length>0&&(isMe||showAll)){avMood='av-tenpai';avBadge='✨';}
+        }
+        const newCls='pa-av'+(avMood?' '+avMood:'');
+        if(avEl.className!==newCls)avEl.className=newCls;
+        const _f=avEl.querySelector('.av-face'),_m=avEl.querySelector('.av-mood');
+        if(_f)_f.textContent=PLAYER_AV[pidx%PLAYER_AV.length];
+        if(_m)_m.textContent=avBadge;
+      }
       mlEl.innerHTML='';
       p.melds.forEach(m=>{const g=document.createElement('div');g.className='meld-g';const lbl=document.createElement('span');lbl.className='meld-lbl';lbl.textContent=m.t==='K'?'カン':m.t==='k'?'刻':'順';g.appendChild(lbl);const tiles=m.t==='K'?[{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num}]:m.t==='k'?[{c:m.char,n:m.num},{c:m.char,n:m.num},{c:m.char,n:m.num}]:[{c:m.char,n:m.num},{c:m.char,n:m.num+1},{c:m.char,n:m.num+2}];tiles.forEach((td,ti)=>{const t=document.createElement('div');t.className='tile open sz-sm'+(m.t==='K'&&!m.open&&(ti===0||ti===3)?' fd':'');const tf=document.createElement('span');tf.className='tf';tf.textContent=CHARS[td.c];const tn=document.createElement('span');tn.className='tn';tn.textContent=td.n;t.appendChild(tf);t.appendChild(tn);g.appendChild(t);});mlEl.appendChild(g);});
       const szCls=isMe?'sz-lg':'sz-md';const canSel=isMe&&this.state==='DISCARD'&&pidx===this.curIdx;
