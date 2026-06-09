@@ -1195,7 +1195,7 @@ button{font-size:14px}
   .pot-n{font-size:11px}
   .pot-r,.pot-l,.pot-h{font-size:5px}
 }
-/* ===== mobile max-table river pass ===== */
+/* ===== mobile balanced river pass ===== */
 @media(max-width:767px){
   #wrap{
     padding:1px;
@@ -1243,28 +1243,28 @@ button{font-size:14px}
     display:none;
   }
   #tbl{
-    width:min(100%,calc(100svh - 108px));
+    width:min(96vw,calc(100svh - 130px));
     max-width:none;
   }
   #dz-top,#dz-bot{
-    left:3%;
-    right:3%;
-    height:34%;
+    left:8%;
+    right:8%;
+    height:33%;
   }
-  #dz-top{top:2%}
-  #dz-bot{bottom:2%}
+  #dz-top{top:3%}
+  #dz-bot{bottom:3%}
   #dz-left,#dz-right{
-    top:8%;
-    bottom:8%;
-    width:34%;
+    top:14%;
+    bottom:14%;
+    width:30%;
   }
-  #dz-left{left:2%}
-  #dz-right{right:2%}
+  #dz-left{left:9%}
+  #dz-right{right:9%}
   #dz-mid{
-    left:44%;
-    right:44%;
-    top:44%;
-    bottom:44%;
+    left:40%;
+    right:40%;
+    top:40%;
+    bottom:40%;
   }
   .dc-row{
     gap:1px;
@@ -1283,7 +1283,7 @@ button{font-size:14px}
     margin-top:0;
   }
   #dz-left .dc-row,#dz-right .dc-row{
-    width:17px;
+    width:16px;
     gap:1px;
   }
   #dz-left .dc-tile{
