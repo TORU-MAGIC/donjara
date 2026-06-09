@@ -1134,6 +1134,67 @@ button{font-size:14px}
   #pot{width:50px;height:50px}
   .pot-n{font-size:13px}
 }
+/* ===== mobile river anti-overlap pass ===== */
+@media(max-width:767px){
+  #tbl{
+    width:min(100%,calc(100svh - 135px));
+  }
+  #dz-top,#dz-bot{
+    left:6%;
+    right:6%;
+    height:39%;
+  }
+  #dz-top{top:1.5%}
+  #dz-bot{bottom:1.5%}
+  #dz-left,#dz-right{
+    top:10%;
+    bottom:10%;
+    width:41%;
+  }
+  #dz-left{left:1%}
+  #dz-right{right:1%}
+  #dz-mid{
+    left:42%;
+    right:42%;
+    top:42%;
+    bottom:42%;
+  }
+  .dc-row{
+    gap:1px;
+    margin-bottom:1px;
+  }
+  .dc-tile{
+    width:12px;
+    height:16px;
+    border-width:1px;
+    border-radius:2px;
+    box-shadow:0 2px 0 #b1946d,0 3px 5px rgba(0,0,0,.3),inset 1px 1px 0 rgba(255,255,255,.75);
+  }
+  .dc-tile .tf{font-size:8px}
+  .dc-tile .tn{font-size:4px}
+  #dz-left .dc-row,#dz-right .dc-row{
+    width:16px;
+    gap:0;
+  }
+  #dz-left .dc-tile{
+    margin:-2px 0;
+    transform:rotate(90deg) translateZ(2px);
+  }
+  #dz-right .dc-tile{
+    margin:-2px 0;
+    transform:rotate(-90deg) translateZ(2px);
+  }
+  #dz-top .dc-tile,#dz-bot .dc-tile{
+    transform:translateZ(2px);
+  }
+  #pot{
+    width:42px;
+    height:42px;
+    border-width:2px;
+  }
+  .pot-n{font-size:11px}
+  .pot-r,.pot-l,.pot-h{font-size:5px}
+}
 </style>
 </head>
 <body>
@@ -1310,6 +1371,7 @@ const AKA_NUM=5,AKA_COPIES=2; // ★ 赤五: 各キャラ2枚 (144牌)
 const HAN_PTS=[0,8,18,35,60,95,200];
 const AI_MS=1100,RON_SEC=6,PON_SEC=4,MAX_HONBA=4,MAX_MELDS=3,KAN_SEC=3;
 const SP_CHARS=[6,7],DC_ROW=6; // 役牌: 🦁(6),🐯(7) / 捨て牌は6枚ごとに折り返して重なりを防ぐ
+function discardRowSize(){return window.matchMedia&&window.matchMedia('(max-width:767px)').matches?5:DC_ROW;}
 let doraIndicators=[],uraDoraIndicators=[]; // ★ 配列化(カンドラ対応)
 const doraIndicator=()=>doraIndicators[0]||null; // 後方互換ヘルパー
 const CHAR_COLORS=[{chars:[0,1],css:'red'},{chars:[2,3],css:'green'},{chars:[4,5],css:'blue'},{chars:[6,7],css:'yellow'}];
@@ -3881,9 +3943,10 @@ class GameEngine{
     const sm=this._seatMap();const pz={bot:'dz-bot',top:'dz-top',left:'dz-left',right:'dz-right'};
     for(const[pos,pidx]of Object.entries(sm)){
       const p=this.players[pidx];const dz=document.getElementById(pz[pos]);if(!dz)continue;dz.innerHTML='';
-      for(let rs=0;rs<p.discards.length;rs+=DC_ROW){
+      const rowSize=discardRowSize();
+      for(let rs=0;rs<p.discards.length;rs+=rowSize){
         const row=document.createElement('div');row.className='dc-row';
-        for(let i=rs;i<Math.min(rs+DC_ROW,p.discards.length);i++){
+        for(let i=rs;i<Math.min(rs+rowSize,p.discards.length);i++){
           const tile=p.discards[i];const div=document.createElement('div');
           let cls='dc-tile';const isLatest=(i===p.discards.length-1&&this.lastDiscardFrom===pidx);if(isLatest)cls+=' dc-latest';if(p.isReach)cls+=' dc-reach';
           div.className=cls;const tf=document.createElement('span');tf.className='tf';tf.textContent=tile.face;const tn=document.createElement('span');tn.className='tn'+(tile.num===AKA_NUM?' aka':'')+'';tn.textContent=tile.num;div.appendChild(tf);div.appendChild(tn);row.appendChild(div);
