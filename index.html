@@ -1335,6 +1335,44 @@ button{font-size:14px}
     display:none;
   }
 }
+/* ===== strict side hand adjacency ===== */
+#hd-left,#hd-right{
+  display:grid!important;
+  grid-template-columns:repeat(2,34px)!important;
+  grid-auto-rows:43px!important;
+  gap:0!important;
+  row-gap:0!important;
+  column-gap:0!important;
+  padding:0!important;
+  align-items:start!important;
+  align-content:start!important;
+  justify-content:center!important;
+  line-height:0!important;
+}
+#hd-left .tile,#hd-right .tile{
+  width:34px!important;
+  height:43px!important;
+  margin:0!important;
+  transform:none!important;
+  border-radius:3px!important;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,.88),
+    inset -1px -2px 4px rgba(108,74,38,.16)!important;
+}
+#hd-left .tile .tf,#hd-right .tile .tf{
+  font-size:16px!important;
+}
+#hd-left .tile .tn,#hd-right .tile .tn{
+  font-size:8px!important;
+}
+#hd-left .tile.fd::before,#hd-right .tile.fd::before{
+  font-size:13px!important;
+}
+@media(max-width:767px){
+  #hd-left,#hd-right{
+    display:none!important;
+  }
+}
 </style>
 </head>
 <body>
