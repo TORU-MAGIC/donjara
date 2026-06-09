@@ -887,6 +887,253 @@ button{font-size:14px}
   #pot{width:68px;height:68px}
   .pot-n{font-size:16px}
 }
+/* ===== wider discard river layout ===== */
+#tbl{
+  width:min(100%,calc(100vh - 245px));
+  min-width:430px;
+}
+#tbl-inner{
+  display:block;
+  inset:0;
+  padding:0;
+}
+.dz{
+  position:absolute;
+  padding:0;
+  overflow:visible;
+  z-index:2;
+}
+#dz-top{
+  left:24%;
+  right:24%;
+  top:4%;
+  height:31%;
+  transform:rotate(180deg);
+  align-items:center;
+  justify-content:flex-start;
+}
+#dz-bot{
+  left:24%;
+  right:24%;
+  bottom:4%;
+  height:31%;
+  align-items:center;
+  justify-content:flex-start;
+}
+#dz-left{
+  left:3%;
+  top:19%;
+  bottom:19%;
+  width:29%;
+  min-width:0;
+  gap:4px;
+  align-items:center;
+  justify-content:flex-start;
+  flex-direction:row-reverse;
+}
+#dz-right{
+  right:3%;
+  top:19%;
+  bottom:19%;
+  width:29%;
+  min-width:0;
+  gap:4px;
+  align-items:center;
+  justify-content:flex-start;
+  flex-direction:row;
+}
+#dz-mid{
+  position:absolute;
+  left:36%;
+  right:36%;
+  top:36%;
+  bottom:36%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1;
+}
+.dc-row{
+  gap:3px;
+  margin-bottom:4px;
+}
+.dc-tile{
+  width:32px;
+  height:41px;
+}
+.dc-tile .tf{font-size:18px}
+.dc-tile .tn{font-size:9px}
+#dz-left .dc-row,#dz-right .dc-row{
+  width:42px;
+  gap:2px;
+}
+#dz-left .dc-tile{
+  margin:-4px 0;
+  transform:rotate(90deg) translateZ(6px);
+}
+#dz-right .dc-tile{
+  margin:-4px 0;
+  transform:rotate(-90deg) translateZ(6px);
+}
+#dz-top .dc-tile,#dz-bot .dc-tile{
+  transform:translateZ(6px);
+}
+#pot{
+  width:96px;
+  height:96px;
+  transform:translateZ(14px);
+}
+@media(min-width:1500px){
+  #tbl{
+    width:min(100%,calc(100vh - 215px));
+    min-width:500px;
+  }
+  .dc-tile{width:34px;height:43px}
+  .dc-tile .tf{font-size:19px}
+  #dz-left .dc-row,#dz-right .dc-row{width:44px}
+}
+@media(max-width:767px){
+  #tbl{
+    width:min(100%,calc(100svh - 165px));
+    min-width:280px;
+  }
+  #dz-top,#dz-bot{
+    left:20%;
+    right:20%;
+    height:30%;
+  }
+  #dz-left,#dz-right{
+    top:20%;
+    bottom:20%;
+    width:31%;
+  }
+  #dz-mid{
+    left:35%;
+    right:35%;
+    top:35%;
+    bottom:35%;
+  }
+  .dc-row{
+    gap:1px;
+    margin-bottom:2px;
+  }
+  .dc-tile{
+    width:17px;
+    height:23px;
+  }
+  .dc-tile .tf{font-size:10px}
+  .dc-tile .tn{font-size:5px}
+  #dz-left .dc-row,#dz-right .dc-row{width:23px;gap:1px}
+  #dz-left .dc-tile{margin:-2px 0}
+  #dz-right .dc-tile{margin:-2px 0}
+  #pot{width:58px;height:58px}
+}
+/* ===== no-overlap discard compact pass ===== */
+#tbl{
+  width:clamp(520px,calc(100vh - 190px),100%);
+  min-width:0;
+}
+#dz-top{
+  left:15%;
+  right:15%;
+  top:2.5%;
+  height:34%;
+}
+#dz-bot{
+  left:15%;
+  right:15%;
+  bottom:2.5%;
+  height:34%;
+}
+#dz-left{
+  left:2%;
+  top:14%;
+  bottom:14%;
+  width:34%;
+}
+#dz-right{
+  right:2%;
+  top:14%;
+  bottom:14%;
+  width:34%;
+}
+#dz-mid{
+  left:39%;
+  right:39%;
+  top:39%;
+  bottom:39%;
+}
+.dc-row{
+  gap:2px;
+  margin-bottom:2px;
+}
+.dc-tile{
+  width:25px;
+  height:32px;
+  border-width:1px;
+  border-radius:3px;
+}
+.dc-tile .tf{font-size:15px}
+.dc-tile .tn{font-size:8px}
+#dz-left .dc-row,#dz-right .dc-row{
+  width:34px;
+  gap:1px;
+}
+#dz-left .dc-tile{
+  margin:-2px 0;
+  transform:rotate(90deg) translateZ(4px);
+}
+#dz-right .dc-tile{
+  margin:-2px 0;
+  transform:rotate(-90deg) translateZ(4px);
+}
+#dz-top .dc-tile,#dz-bot .dc-tile{
+  transform:translateZ(4px);
+}
+#pot{
+  width:82px;
+  height:82px;
+}
+.pot-n{font-size:20px}
+@media(min-width:1500px){
+  #tbl{width:clamp(560px,calc(100vh - 170px),100%)}
+  .dc-tile{width:27px;height:34px}
+  .dc-tile .tf{font-size:16px}
+  #dz-left .dc-row,#dz-right .dc-row{width:36px}
+}
+@media(max-width:767px){
+  #tbl{
+    width:min(100%,calc(100svh - 150px));
+    min-width:0;
+  }
+  #dz-top,#dz-bot{
+    left:12%;
+    right:12%;
+    height:35%;
+  }
+  #dz-left,#dz-right{
+    top:13%;
+    bottom:13%;
+    width:36%;
+  }
+  #dz-mid{
+    left:38%;
+    right:38%;
+    top:38%;
+    bottom:38%;
+  }
+  .dc-tile{
+    width:15px;
+    height:20px;
+  }
+  .dc-tile .tf{font-size:9px}
+  .dc-tile .tn{font-size:5px}
+  #dz-left .dc-row,#dz-right .dc-row{width:21px}
+  #dz-left .dc-tile{margin:-2px 0}
+  #dz-right .dc-tile{margin:-2px 0}
+  #pot{width:50px;height:50px}
+  .pot-n{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -1062,7 +1309,7 @@ const AKA_NUM=5,AKA_COPIES=2; // ★ 赤五: 各キャラ2枚 (144牌)
 // 1翻=8, 2翻=18, 3翻=35, 4翻=60, 5翻=95, 6翻(役満)=200
 const HAN_PTS=[0,8,18,35,60,95,200];
 const AI_MS=1100,RON_SEC=6,PON_SEC=4,MAX_HONBA=4,MAX_MELDS=3,KAN_SEC=3;
-const SP_CHARS=[6,7],DC_ROW=8; // 役牌: 🦁(6),🐯(7)
+const SP_CHARS=[6,7],DC_ROW=6; // 役牌: 🦁(6),🐯(7) / 捨て牌は6枚ごとに折り返して重なりを防ぐ
 let doraIndicators=[],uraDoraIndicators=[]; // ★ 配列化(カンドラ対応)
 const doraIndicator=()=>doraIndicators[0]||null; // 後方互換ヘルパー
 const CHAR_COLORS=[{chars:[0,1],css:'red'},{chars:[2,3],css:'green'},{chars:[4,5],css:'blue'},{chars:[6,7],css:'yellow'}];
