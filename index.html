@@ -1258,8 +1258,8 @@ button{font-size:14px}
     bottom:14%;
     width:30%;
   }
-  #dz-left{left:9%}
-  #dz-right{right:9%}
+  #dz-left{left:11%}
+  #dz-right{right:11%}
   #dz-mid{
     left:40%;
     right:40%;
@@ -1555,13 +1555,14 @@ button{font-size:14px}
 }
 @media(max-width:767px){
   :root{
-    --river-tile-w:11px;
-    --river-tile-h:15px;
-    --river-thick:2px;
-    --river-rise:2px;
+    --river-tile-w:15px;
+    --river-tile-h:20px;
+    --river-thick:3px;
+    --river-rise:3px;
   }
   #tbl{
-    width:min(100%,calc(100svh - 130px));
+    width:min(100%,calc(100vw - 56px),calc(100svh - 130px));
+    max-width:100%;
     transform:perspective(900px) rotateX(4deg) translateZ(0);
     border-radius:18px;
   }
@@ -1593,8 +1594,8 @@ button{font-size:14px}
   .dc-tile::before{
     inset:1px 2px auto 2px;
   }
-  .dc-tile .tf{font-size:7px}
-  .dc-tile .tn{font-size:4px;margin-top:0}
+  .dc-tile .tf{font-size:9px}
+  .dc-tile .tn{font-size:5px;margin-top:0}
   #pot{
     width:34px;
     height:34px;
@@ -1781,6 +1782,7 @@ const SP_CHARS=[6,7],DC_ROW=6; // 役牌: 🦁(6),🐯(7) / 捨て牌は6枚ご�
 function discardRowSize(){return window.matchMedia&&window.matchMedia('(max-width:767px)').matches?4:DC_ROW;}
 let doraIndicators=[],uraDoraIndicators=[]; // ★ 配列化(カンドラ対応)
 const doraIndicator=()=>doraIndicators[0]||null; // 後方互換ヘルパー
+function discardRowSize(){return DC_ROW;}
 const CHAR_COLORS=[{chars:[0,1],css:'red'},{chars:[2,3],css:'green'},{chars:[4,5],css:'blue'},{chars:[6,7],css:'yellow'}];
 function charColor(c){return CHAR_COLORS.find(g=>g.chars.includes(c))||CHAR_COLORS[0];}
 function drawSize(k){return N_INIT-k*3;}
