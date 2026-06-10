@@ -1373,6 +1373,235 @@ button{font-size:14px}
     display:none!important;
   }
 }
+/* ===== final realistic table and zero-gap discard river ===== */
+:root{
+  --river-tile-w:28px;
+  --river-tile-h:36px;
+  --river-thick:5px;
+  --river-rise:8px;
+}
+#tbl{
+  background:
+    radial-gradient(circle at 50% 43%,rgba(255,255,255,.16),transparent 10%),
+    repeating-linear-gradient(38deg,rgba(255,255,255,.032) 0 1px,transparent 1px 6px),
+    repeating-linear-gradient(128deg,rgba(0,0,0,.05) 0 1px,transparent 1px 7px),
+    radial-gradient(circle at 50% 50%,#2f8f51 0%,#17643b 43%,#0a2d18 82%,#061b0f 100%);
+  border-radius:24px;
+  transform:perspective(1100px) rotateX(8deg) translateY(2px) translateZ(0);
+  box-shadow:
+    0 30px 0 #241005,
+    0 42px 48px rgba(0,0,0,.74),
+    inset 0 0 0 3px rgba(255,226,155,.23),
+    inset 0 0 70px rgba(0,0,0,.56);
+}
+#tbl::after{
+  inset:16px;
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 32% 24%,rgba(255,255,255,.22),transparent 18%),
+    radial-gradient(circle at 68% 75%,rgba(0,0,0,.22),transparent 45%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.028) 0 1px,transparent 1px 5px);
+  mix-blend-mode:soft-light;
+}
+#tbl-inner{
+  transform-style:preserve-3d;
+}
+.dz{
+  transform-style:preserve-3d;
+  perspective:900px;
+  overflow:visible!important;
+  pointer-events:none;
+}
+#dz-top,#dz-bot{
+  left:10%;
+  right:10%;
+  height:34%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0;
+}
+#dz-top{
+  top:3%;
+  transform:rotate(180deg) translateZ(14px);
+}
+#dz-bot{
+  bottom:3%;
+  transform:translateZ(14px);
+}
+#dz-left,#dz-right{
+  top:12%;
+  bottom:12%;
+  width:31%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+}
+#dz-left{
+  left:4%;
+  flex-direction:row-reverse;
+}
+#dz-right{
+  right:4%;
+  flex-direction:row;
+}
+.dc-row{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  margin:0!important;
+  line-height:0;
+  filter:drop-shadow(0 5px 5px rgba(0,0,0,.3));
+  transform-style:preserve-3d;
+}
+#dz-top .dc-row,#dz-bot .dc-row{
+  height:var(--river-tile-h);
+}
+#dz-left .dc-row,#dz-right .dc-row{
+  flex-direction:column;
+  width:var(--river-tile-h)!important;
+  gap:0!important;
+}
+.dc-tile{
+  width:var(--river-tile-w)!important;
+  height:var(--river-tile-h)!important;
+  margin:0!important;
+  overflow:visible;
+  isolation:isolate;
+  border:1px solid #c4a982;
+  border-radius:4px;
+  background:
+    radial-gradient(circle at 24% 14%,rgba(255,255,255,.96),transparent 22%),
+    linear-gradient(150deg,#fffdf8 0%,#fff4df 44%,#e7d2ad 72%,#c9ad80 100%)!important;
+  box-shadow:
+    0 var(--river-thick) 0 #a9885d,
+    0 calc(var(--river-thick) + 4px) 9px rgba(0,0,0,.34),
+    inset 1px 1px 0 rgba(255,255,255,.9),
+    inset -1px -2px 4px rgba(88,57,29,.18)!important;
+}
+.dc-tile::before{
+  z-index:1;
+}
+.dc-tile::after{
+  content:'';
+  position:absolute;
+  left:2px;
+  right:2px;
+  bottom:calc(var(--river-thick) * -1);
+  height:var(--river-thick);
+  border-radius:0 0 4px 4px;
+  background:linear-gradient(180deg,#c7a77b,#8f6b44);
+  pointer-events:none;
+  z-index:0;
+}
+.dc-tile .tf,.dc-tile .tn{
+  position:relative;
+  z-index:2;
+}
+#dz-left .dc-tile{
+  margin-block:calc((var(--river-tile-w) - var(--river-tile-h)) / 2)!important;
+  transform:rotate(90deg) translateZ(var(--river-rise))!important;
+}
+#dz-right .dc-tile{
+  margin-block:calc((var(--river-tile-w) - var(--river-tile-h)) / 2)!important;
+  transform:rotate(-90deg) translateZ(var(--river-rise))!important;
+}
+#dz-top .dc-tile,#dz-bot .dc-tile{
+  transform:translateZ(var(--river-rise))!important;
+}
+@keyframes dcLatestPop3d{
+  0%{transform:translateZ(0) scale(.35) rotate(-12deg);opacity:0;filter:brightness(2.3)}
+  58%{transform:translateZ(18px) scale(1.16) rotate(3deg);opacity:1;filter:brightness(1.45)}
+  100%{transform:translateZ(var(--river-rise)) scale(1) rotate(0);opacity:1;filter:brightness(1)}
+}
+@keyframes dcLatestPopL3d{
+  0%{transform:rotate(90deg) translateZ(0) scale(.35);opacity:0;filter:brightness(2.3)}
+  58%{transform:rotate(90deg) translateZ(18px) scale(1.16);opacity:1;filter:brightness(1.45)}
+  100%{transform:rotate(90deg) translateZ(var(--river-rise)) scale(1);opacity:1;filter:brightness(1)}
+}
+@keyframes dcLatestPopR3d{
+  0%{transform:rotate(-90deg) translateZ(0) scale(.35);opacity:0;filter:brightness(2.3)}
+  58%{transform:rotate(-90deg) translateZ(18px) scale(1.16);opacity:1;filter:brightness(1.45)}
+  100%{transform:rotate(-90deg) translateZ(var(--river-rise)) scale(1);opacity:1;filter:brightness(1)}
+}
+#dz-top .dc-tile.dc-latest,#dz-bot .dc-tile.dc-latest{
+  animation-name:dcLatestPop3d,dcLatestGlow!important;
+}
+#dz-left .dc-tile.dc-latest{
+  animation-name:dcLatestPopL3d,dcLatestGlow!important;
+}
+#dz-right .dc-tile.dc-latest{
+  animation-name:dcLatestPopR3d,dcLatestGlow!important;
+}
+.tile,.dc-tile,.dora-mini,.ht{
+  border-color:#c4a982;
+}
+@media(min-width:1500px){
+  :root{
+    --river-tile-w:30px;
+    --river-tile-h:38px;
+    --river-thick:6px;
+    --river-rise:10px;
+  }
+  #dz-top,#dz-bot{
+    left:9%;
+    right:9%;
+  }
+}
+@media(max-width:767px){
+  :root{
+    --river-tile-w:11px;
+    --river-tile-h:15px;
+    --river-thick:2px;
+    --river-rise:2px;
+  }
+  #tbl{
+    width:min(100%,calc(100svh - 130px));
+    transform:perspective(900px) rotateX(4deg) translateZ(0);
+    border-radius:18px;
+  }
+  #tbl::after{
+    inset:10px;
+    border-radius:12px;
+  }
+  #dz-top,#dz-bot{
+    left:8%;
+    right:8%;
+    height:33%;
+  }
+  #dz-top{top:3%}
+  #dz-bot{bottom:3%}
+  #dz-left,#dz-right{
+    top:14%;
+    bottom:14%;
+    width:30%;
+  }
+  #dz-left{left:9%}
+  #dz-right{right:9%}
+  .dc-tile{
+    border-radius:2px;
+    box-shadow:
+      0 var(--river-thick) 0 #a9885d,
+      0 calc(var(--river-thick) + 2px) 4px rgba(0,0,0,.28),
+      inset 1px 1px 0 rgba(255,255,255,.72)!important;
+  }
+  .dc-tile::before{
+    inset:1px 2px auto 2px;
+  }
+  .dc-tile .tf{font-size:7px}
+  .dc-tile .tn{font-size:4px;margin-top:0}
+  #pot{
+    width:34px;
+    height:34px;
+  }
+  .pot-n{font-size:9px}
+  .pot-r,.pot-l,.pot-h{font-size:4px}
+}
 </style>
 </head>
 <body>
