@@ -716,7 +716,7 @@ body::before{
     linear-gradient(152deg,#fffefa 0%,var(--ivory) 42%,#eadbc2 70%,var(--ivory-edge) 100%);
   border-color:#b99e7b;
   transform-style:preserve-3d;
-  text-shadow:0 1px 0 rgba(255,255,255,.75);
+  text-shadow:0 1px 0 rgba(255,255,255,.75),0 -1px 1px rgba(89,61,34,.18);
   box-shadow:
     0 7px 0 #b1946d,
     0 10px 15px rgba(0,0,0,.36),
@@ -724,16 +724,25 @@ body::before{
     inset -2px -3px 6px rgba(108,74,38,.2);
 }
 .tile:not(.fd)::before,.dc-tile::before,.dora-mini::before,.ht::before{
-  content:'';
-  position:absolute;
-  inset:3px 4px auto 4px;
-  height:38%;
-  pointer-events:none;
-  border-radius:inherit;
-  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));
+  content:none;
 }
 .tile .tf,.dc-tile .tf,.dora-mini .tf,.ht .tf{
-  filter:drop-shadow(0 1px 0 rgba(255,255,255,.8)) drop-shadow(0 2px 1px rgba(0,0,0,.18));
+  position:relative;
+  z-index:3;
+  display:block;
+  transform:translateY(-1px) scale(1.08);
+  transform-origin:center;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.95),
+    0 -1px 0 rgba(78,48,24,.28),
+    1px 2px 0 rgba(255,255,255,.42);
+  filter:
+    drop-shadow(0 -1px 0 rgba(255,255,255,.82))
+    drop-shadow(0 2px 0 rgba(115,76,40,.22))
+    drop-shadow(0 4px 3px rgba(0,0,0,.24));
+}
+.tile .tn,.dc-tile .tn,.dora-mini .tn,.ht .tn{
+  text-shadow:0 1px 0 rgba(255,255,255,.86),0 -1px 0 rgba(104,45,32,.18);
 }
 .tile.fd{
   background:
@@ -1484,9 +1493,6 @@ button{font-size:14px}
     inset 1px 1px 0 rgba(255,255,255,.9),
     inset -1px -2px 4px rgba(88,57,29,.18)!important;
 }
-.dc-tile::before{
-  z-index:1;
-}
 .dc-tile::after{
   content:'';
   position:absolute;
@@ -1603,6 +1609,14 @@ button{font-size:14px}
   .pot-n{font-size:9px}
   .pot-r,.pot-l,.pot-h{font-size:4px}
 }
+
+/* 牌絵の上部枠を消した後、絵柄だけを少し浮き彫りにする最終上書き */
+.tile .tf,.dora-mini .tf,.ht .tf{
+  transform:translateY(-1px) translateZ(6px) scale(1.08)!important;
+}
+.dc-tile .tf{
+  transform:translateY(-.5px) translateZ(4px) scale(1.06)!important;
+}
 </style>
 </head>
 <body>
@@ -1643,15 +1657,15 @@ button{font-size:14px}
     <h3>📖 役一覧</h3>
     <div class="yr-h">1翻</div>
     <div class="yr"><span class="yn">リーチ/門前ツモ/ダブルリーチ</span><span class="yh">1-2</span></div>
-    <div class="yr"><span class="yn">タンヤオ/全順子/役牌(🦁🐯)</span><span class="yh">1</span></div>
-    <div class="yr"><span class="yn">一盃口/小役牌/動物園🐾</span><span class="yh">1</span></div>
+    <div class="yr"><span class="yn">タンヤオ/平和/役牌(🦁🐯)</span><span class="yh">1</span></div>
+    <div class="yr"><span class="yn">一盃口/小役牌/一発</span><span class="yh">1</span></div>
     <div class="yr-h">2翻</div>
-    <div class="yr"><span class="yn">三暗刻/三連刻/三色同順・同刻</span><span class="yh">2</span></div>
+    <div class="yr"><span class="yn">対々和/三暗刻/三連刻/三色</span><span class="yh">2</span></div>
     <div class="yr"><span class="yn">大役牌(🦁🐯両刻)</span><span class="yh">2</span></div>
     <div class="yr"><span class="yn">一気通貫/チャンタ</span><span class="yh">2</span></div>
-    <div class="yr"><span class="yn">同色(同色ペア/1色)</span><span class="yh">2/3</span></div>
+    <div class="yr"><span class="yn">混一色/清一色</span><span class="yh">3/5</span></div>
     <div class="yr-h">3翻+</div>
-    <div class="yr"><span class="yn">1色3翻/4色1翻/対々和(鳴き1翻)</span><span class="yh">1/2/3</span></div>
+    <div class="yr"><span class="yn">リーチ棒10点供託/ドラは役に非ず</span><span class="yh">熱</span></div>
     <div class="yr"><span class="yn">清老頭/地和(役満)</span><span class="yh">6</span></div>
   </div>
 </div>
@@ -1774,9 +1788,10 @@ const PLAYER_AV=['🦊','🐼','🐵','🐻']; // ★ プレイヤーアバタ�
 const N_CHARS=8,N_NUMS=5,COPIES=4,N_PL=4;
 const N_INIT=10,N_WIN=11,START_PT=300; // ★ N_NUMS=5(1-4が4枚,5は赤五で1枚)
 const AKA_NUM=5,AKA_COPIES=2; // ★ 赤五: 各キャラ2枚 (144牌)
-// ★ 翻数→基礎点(役難易度と達成感を考慮して再設計)
-// 1翻=8, 2翻=18, 3翻=35, 4翻=60, 5翻=95, 6翻(役満)=200
-const HAN_PTS=[0,8,18,35,60,95,200];
+// ★ 麻雀寄りバランス: 1翻から戦えるが、満貫級以上は明確に重い
+// calcPts側でロン=約3人分、ツモ=3人払いに揃える
+const HAN_PTS=[0,10,20,35,55,80,100];
+const REACH_BET=10; // リーチ棒: 宣言時に10点供託、次の上がり者が総取り
 const AI_MS=1100,RON_SEC=6,PON_SEC=4,MAX_HONBA=4,MAX_MELDS=3,KAN_SEC=3;
 const SP_CHARS=[6,7],DC_ROW=6; // 役牌: 🦁(6),🐯(7) / 捨て牌は6枚ごとに折り返して重なりを防ぐ
 function discardRowSize(){return window.matchMedia&&window.matchMedia('(max-width:767px)').matches?4:DC_ROW;}
@@ -1793,6 +1808,38 @@ const CPU_TYPES=['atk','cau','nml'];
 const CPU_TYPE_LABEL={atk:'⚔特攻型',cau:'🛡慎重型',nml:'⚖普通型'};
 const CPU_TYPE_BADGE={atk:'b-atk',cau:'b-cau',nml:'b-nml'};
 function randCpuType(){return CPU_TYPES[Math.floor(Math.random()*3)];}
+
+const BGM_FILES={
+  game:'audio/牌を並べる午後.mp3',  // 通常ゲーム中BGM
+  reach:'audio/リーチの一枚.mp3',  // リーチ後BGM
+  win:'audio/竜紋ブレイクアウト .mp3'  // あがり時BGM
+};
+const FileBGM=(()=>{
+  const tracks={};
+  function get(name){
+    const src=BGM_FILES[name];
+    if(!src)return null;
+    if(!tracks[name]||tracks[name].dataset.src!==src){
+      const a=new Audio(src);
+      a.dataset.src=src;a.loop=name!=='win';a.preload='auto';
+      a.volume=name==='reach'?0.42:name==='win'?0.52:0.22;
+      tracks[name]=a;
+    }
+    return tracks[name];
+  }
+  function play(name,restart=false){
+    const a=get(name);if(!a)return false;
+    if(restart)a.currentTime=0;
+    a.play().catch(()=>{});
+    return true;
+  }
+  function stop(name){
+    const a=tracks[name];if(!a)return;
+    a.pause();try{a.currentTime=0;}catch(e){}
+  }
+  function pause(name){const a=tracks[name];if(a)a.pause();}
+  return{play,stop,pause,has:name=>!!BGM_FILES[name]};
+})();
 
 const SFX=(()=>{
   let ctx=null;
@@ -2288,7 +2335,7 @@ function tenpai(hand,melds){
   return w;
 }
 
-// ★ ドラ役なし版 yakuDetect
+// ★ 麻雀寄りバランス版 yakuDetect
 function yakuDetect(hand,res,openMelds,ctx){
   if(!res)return[];
   const{pair,mentsu}=res;
@@ -2313,11 +2360,10 @@ function yakuDetect(hand,res,openMelds,ctx){
   if(ctx.isChiiho){yaku.push({name:'地和',han:6});return yaku;}
   if(allTiles.every(t=>t.num===1||t.num===N_NUMS)){yaku.push({name:'清老頭',han:6});return yaku;}
   if(allTiles.every(t=>t.num>=2)&&pair.num>=2)yaku.push({name:'タンヤオ',han:1});
-  if(!isOpen&&seqs.length===3)yaku.push({name:'全順子',han:1});
+  if(!isOpen&&seqs.length===3)yaku.push({name:'平和',han:1});
   for(const sc of SP_CHARS)if(tris.some(m=>m.char===sc))yaku.push({name:'役牌'+CHARS[sc],han:1});
   if(tris.length===3){
-    // ★ 対々和: 鳴きがある場合のみ1翻 (門前は三暗刻が付くので対々和は不要)
-    if(isOpen)yaku.push({name:'対々和',han:1});
+    yaku.push({name:'対々和',han:2});
     // 三暗刻: 3面子全て暗刻(門前)。ロンでも成立(暗刻3つでの和了)
     if(tris.filter(m=>!m.open).length===3)yaku.push({name:'三暗刻',han:2});
   }
@@ -2330,17 +2376,9 @@ function yakuDetect(hand,res,openMelds,ctx){
   for(const ns of Object.values(sm))if(ns.has(1)&&ns.has(3)){yaku.push({name:'一気通貫',han:isOpen?1:2});break;}
   const chanta=allM.every(m=>m.t==='k'?(m.num===1||m.num===N_NUMS):(m.num===1||m.num===N_NUMS-2));
   if(chanta&&(pair.num===1||pair.num===N_NUMS))yaku.push({name:'チャンタ',han:isOpen?1:2});
-  if(new Set([pair.char,...allM.map(m=>m.char)]).size===1)yaku.push({name:'清一色',han:isOpen?2:3});
   const cs=new Set([pair.char,...allM.map(m=>m.char)]);
-  // ★ 4色: csを使って4色グループ全使用チェック (宣言後に移動)
-  const colorGroupsUsed=CHAR_COLORS.filter(g=>g.chars.some(ch=>cs.has(ch))).length;
-  if(colorGroupsUsed===4&&!yaku.some(y=>y.name==='清一色'||y.name==='同色')){
-    yaku.push({name:'4色',han:1}); // ★ 鳴き関係なし常に1翻
-  }
-  // 同色: 使用キャラが同じ色グループの2種のみ (混一色の上位)
-  const sameColorPair=cs.size===2&&CHAR_COLORS.some(g=>[...cs].every(c=>g.chars.includes(c)));
-  if(sameColorPair&&!yaku.some(y=>y.name==='清一色'))yaku.push({name:'同色',han:isOpen?2:3});
-  if(cs.size===2&&!yaku.some(y=>y.name==='清一色')&&!sameColorPair)yaku.push({name:'混一色',han:isOpen?1:2});
+  if(cs.size===1)yaku.push({name:'清一色',han:isOpen?4:5});
+  else if(cs.size===2)yaku.push({name:'混一色',han:isOpen?2:3});
   if(tris.length===3){
     const tc=tris.map(m=>m.char),tn=[...tris.map(m=>m.num)].sort((a,b)=>a-b);
     if(new Set(tc).size===1&&tn[1]===tn[0]+1&&tn[2]===tn[1]+1)yaku.push({name:'三連刻',han:2});
@@ -2357,8 +2395,7 @@ function yakuDetect(hand,res,openMelds,ctx){
     const triSp=SP_CHARS.filter(sc=>tris.some(m=>m.char===sc));
     if(triSp.length===1){const other=SP_CHARS.find(sc=>sc!==triSp[0]);if(pair.char===other)yaku.push({name:'小役牌',han:1});}
   }
-  // ★ 動物園(ドンジャラ): 雀頭+3面子が全て異なる動物 (バラエティ役)
-  if(new Set([pair.char,...allM.map(m=>m.char)]).size===4)yaku.push({name:'動物園',han:1});
+
   // ★ ドラ役を追加 (カンドラ含む全ドラ)
   if(doraIndicators.length>0){
     let totalDora=0;
@@ -2381,7 +2418,7 @@ function yakuDetect(hand,res,openMelds,ctx){
 
 function validWin(yaku,isTsumo){
   if(!yaku.length)return false;if(isTsumo)return true;
-  const SITU=['リーチ','ダブルリーチ','門前ツモ','ハイテイ','河底','嶺上開花'];
+  const SITU=['リーチ','ダブルリーチ','門前ツモ','ハイテイ','河底','嶺上開花','ドラ','裏ドラ'];
   return yaku.some(y=>!SITU.includes(y.name));
 }
 
@@ -2390,11 +2427,18 @@ function calcPts(yaku,honba,winnerIdx,loserIdx,isTsumo,dealerIdx){
   const isDealer=winnerIdx===dealerIdx;
   const base=HAN_PTS[Math.min(han,HAN_PTS.length-1)];
   const unit=Math.ceil(base*(isDealer?1.5:1)/5)*5;
+  const honbaBonus=honba*5;
   const deltas=new Array(N_PL).fill(0);
   if(isTsumo){
-    for(let i=0;i<N_PL;i++){if(i===winnerIdx)continue;const pay=unit+honba*3;deltas[i]-=pay;deltas[winnerIdx]+=pay;}
-  }else{
-    if(loserIdx>=0&&loserIdx<N_PL){const pay=unit+honba*3;deltas[loserIdx]-=pay;deltas[winnerIdx]+=pay;}
+    const honbaEach=Math.ceil(honbaBonus/(N_PL-1));
+    for(let i=0;i<N_PL;i++){
+      if(i===winnerIdx)continue;
+      const pay=unit+honbaEach;
+      deltas[i]-=pay;deltas[winnerIdx]+=pay;
+    }
+  }else if(loserIdx>=0&&loserIdx<N_PL){
+    const pay=unit*(N_PL-1)+honbaBonus;
+    deltas[loserIdx]-=pay;deltas[winnerIdx]+=pay;
   }
   return{han,deltas};
 }
@@ -2412,7 +2456,7 @@ function analyzePatterns(hand,melds,deck){
     const dt=hand.find(t=>t.num===1||t.num===N_NUMS);
     if(dt){let rm=false;const sub=hand.filter(t=>{if(!rm&&t.char===dt.char&&t.num===dt.num){rm=true;return false;}return true;});pats.push({name:'タンヤオ狙い',han:1,detail:'端牌(1か'+N_NUMS+'の牌)を捨てて中張牌のみで揃える',waiting:tenpai(sub,melds),discard:dt});}
   }
-  // ③ 同色 (同色ペア統一)
+  // ③ 混一色 (2キャラ統一)
   if(pats.length<3){
     const cg={};hand.forEach(t=>{cg[t.char]=(cg[t.char]||0)+1;});
     // 同じ色グループ内の2キャラが多い場合
@@ -2420,7 +2464,7 @@ function analyzePatterns(hand,melds,deck){
       const total=grp.chars.reduce((s,c)=>s+(cg[c]||0),0);
       if(total>=7){
         const outsider=hand.find(t=>!grp.chars.includes(t.char));
-        if(outsider){let rm=false;const sub=hand.filter(t=>{if(!rm&&t.char===outsider.char&&t.num===outsider.num){rm=true;return false;}return true;});pats.push({name:'同色狙い',han:3,detail:CHARS[grp.chars[0]]+'と'+CHARS[grp.chars[1]]+'の同色ペアで統一',waiting:tenpai(sub,melds),discard:outsider});break;}
+        if(outsider){let rm=false;const sub=hand.filter(t=>{if(!rm&&t.char===outsider.char&&t.num===outsider.num){rm=true;return false;}return true;});pats.push({name:'混一色狙い',han:3,detail:'2種類のキャラだけで揃える勝負手 (門前3翻/鳴き2翻)',waiting:tenpai(sub,melds),discard:outsider});break;}
       }
     }
   }
@@ -2430,24 +2474,16 @@ function analyzePatterns(hand,melds,deck){
     const best=Object.entries(cg2).sort((a,b)=>b[1]-a[1])[0];
     if(best&&parseInt(best[1])>=5){
       const ci=parseInt(best[0]);const dt2=hand.find(t=>t.char!==ci);
-      if(dt2){let rm=false;const sub2=hand.filter(t=>{if(!rm&&t.char===dt2.char&&t.num===dt2.num){rm=true;return false;}return true;});pats.push({name:'清一色狙い',han:3,detail:CHARS[ci]+'のみで揃える高翻役 (門前3翻)',waiting:tenpai(sub2,melds),discard:dt2});}
+      if(dt2){let rm=false;const sub2=hand.filter(t=>{if(!rm&&t.char===dt2.char&&t.num===dt2.num){rm=true;return false;}return true;});pats.push({name:'清一色狙い',han:5,detail:CHARS[ci]+'のみで揃える大物手 (門前5翻/鳴き4翻)',waiting:tenpai(sub2,melds),discard:dt2});}
     }
   }
   // ⑤ 対々和 (刻子3つ)
   if(pats.length<3){
     const cnt={};hand.forEach(t=>{const k=t.char*10+t.num;cnt[k]=(cnt[k]||0)+1;});
     if(Object.values(cnt).filter(v=>v>=2).length>=2)
-      pats.push({name:'対々和狙い(鳴き1翻)',han:1,detail:'ポン×3で刻子を揃える。鳴き=1翻、三連刻+対々和の複合も可',waiting:cur,discard:null});
+      pats.push({name:'対々和狙い',han:2,detail:'ポンも使って刻子を揃える2翻役。門前なら三暗刻との複合も狙える',waiting:cur,discard:null});
   }
-  // 4色: 全8キャラ使用
-  if(pats.length<3){
-    const usedChars=new Set(hand.map(t=>t.char));
-    const colorGroupsUsed=CHAR_COLORS.filter(g=>g.chars.some(c=>usedChars.has(c))).length;
-    if(colorGroupsUsed>=3){
-      const leastChar=CHAR_COLORS.find(g=>!g.chars.some(c=>usedChars.has(c)));
-      if(!leastChar)pats.push({name:'4色狙い',han:1,detail:'全4色グループ(赤緑青黄)の8キャラ全種を使用。鳴き関係なし1翻',waiting:cur,discard:null});
-    }
-  }
+
   return pats.slice(0,3);
 }
 
@@ -2534,7 +2570,7 @@ class Player{
   constructor(name,isHuman,idx,cpuType){
     this.name=name;this.isHuman=isHuman;this.idx=idx;this.cpuType=cpuType||null;
     this.hand=[];this.discards=[];this.melds=[];
-    this.score=START_PT;this.isReach=false;this.pendingReach=false;
+    this.score=START_PT;this.isReach=false;this.pendingReach=false;this.reachPaid=false;
     this.validReachIdx=[];this.waiting=[];this.ippatsu=false;
     this.selIdx=-1;this.furiten=false;this.tempFuriten=false;this.isDoubleReach=false;
     this.justPonned=false;this.firstDraw=true;
@@ -2544,7 +2580,7 @@ class Player{
   }
   reset(){
     this.hand=[];this.discards=[];this.melds=[];
-    this.isReach=false;this.pendingReach=false;this.validReachIdx=[];
+    this.isReach=false;this.pendingReach=false;this.reachPaid=false;this.validReachIdx=[];
     this.waiting=[];this.ippatsu=false;this.selIdx=-1;
     this.furiten=false;this.tempFuriten=false;this.isDoubleReach=false;this.justPonned=false;
     this.firstDraw=true;this.genbutsu=new Set();this.safeSet=new Set();
@@ -2710,6 +2746,7 @@ class GameEngine{
     this._ronGuestTid=null; // ★ 人間ゲストRON待ちタイマー(ホスト用)
     this._ponGuestTid=null; // ★ 人間ゲストPON待ちタイマー(ホスト用)
     this._scores=new Array(N_PL).fill(START_PT);
+    this.reachPot=0;
     this._ronWinners=[];  // ★ ダブル/トリプルロン収集用
     this._awardTid=null;this._awAnimId=null;this._awardCallback=null; // ★ アワード
     this._pendingGameOver=false;this._pendingFinalData=null; // ★ 最終結果遷移用
@@ -2758,6 +2795,20 @@ class GameEngine{
 
   _isDlr(p){return p.idx===this.dealerIdx;}
   _isGameOver(){return this.dealerDone.every(d=>d>=(this.gameMode==='half'?2:1));}
+  _payReach(p){
+    if(!p||p.reachPaid)return false;
+    if(p.score<REACH_BET){this.log('⚠ リーチ棒の点数が足りません','err');return false;}
+    p.score-=REACH_BET;this._scores[p.idx]=p.score;
+    this.reachPot=(this.reachPot||0)+REACH_BET;
+    p.reachPaid=true;
+    this.log(`🔥 ${p.name} リーチ棒 -${REACH_BET} / 供託${this.reachPot}点`,'reach');
+    return true;
+  }
+  _takeReachPot(winnerIdx,deltas){
+    const pot=this.reachPot||0;
+    if(pot>0&&winnerIdx>=0&&deltas){deltas[winnerIdx]+=pot;this.reachPot=0;}
+    return pot;
+  }
   _clrT(){if(this.ronTid){clearTimeout(this.ronTid);this.ronTid=null;}if(this.ronItv){clearInterval(this.ronItv);this.ronItv=null;}if(this.ponTid){clearTimeout(this.ponTid);this.ponTid=null;}if(this.ponItv){clearInterval(this.ponItv);this.ponItv=null;}if(this._ronGuestTid){clearTimeout(this._ronGuestTid);this._ronGuestTid=null;}if(this._ponGuestTid){clearTimeout(this._ponGuestTid);this._ponGuestTid=null;}if(this._ronResolveTid){clearTimeout(this._ronResolveTid);this._ronResolveTid=null;}this._ronWinners=[];this._disarmNetWd();}
   _clrGuard(){if(this._cpuGuard){clearTimeout(this._cpuGuard);this._cpuGuard=null;}}
 
@@ -2788,13 +2839,31 @@ class GameEngine{
 
   // ━━ リーチBGM 制御 ━━
   startReachBGM(){
-    ReachBGM.start();
+    this.stopGameBGM();
+    if(!FileBGM.play('reach',true)){
+      ReachBGM.start();
+      this._tickReachBgmTempo();
+    }
     document.body.classList.add('reach-bgm-on');
-    this._tickReachBgmTempo();
   }
   stopReachBGM(){
+    FileBGM.stop('reach');
     ReachBGM.stop();
     document.body.classList.remove('reach-bgm-on');
+  }
+  startGameBGM(){
+    FileBGM.play('game');
+  }
+  stopGameBGM(){
+    FileBGM.stop('game');
+  }
+  startWinBGM(){
+    this.stopGameBGM();
+    this.stopReachBGM();
+    FileBGM.play('win',true);
+  }
+  stopWinBGM(){
+    FileBGM.stop('win');
   }
   _tickReachBgmTempo(){
     if(!ReachBGM.isRunning())return;
@@ -3008,26 +3077,24 @@ class GameEngine{
     const SP_NAMES=SP_CHARS.map(c=>CHARS[c]).join('・');
     return `<div class="hs" style="margin-top:10px">
 <div class="hs-t" style="font-size:12px;color:#88f">📖 役一覧 — このゲームで使える役</div>
-<div style="font-size:9px;color:#888;margin-bottom:5px">※ドラは点数加算なし(役としてカウントしない)</div>
+<div style="font-size:9px;color:#888;margin-bottom:5px">※ドラ/裏ドラは成立役がある時だけ翻として加算。リーチ棒は10点供託、上がり者が獲得</div>
 <div class="yg-sect">── 門前（ポンなし）のみ ──</div>
 <div class="yg-row"><span class="yg-name">リーチ</span><span class="yg-desc">テンパイ時にリーチ宣言。以降は引いた牌のみ捨てられる</span><span class="yg-han">1翻</span></div>
 <div class="yg-row"><span class="yg-name">ダブルリーチ</span><span class="yg-desc">最初の捨て牌でリーチ</span><span class="yg-han">2翻</span></div>
 
 <div class="yg-row"><span class="yg-name">門前ツモ</span><span class="yg-desc">ポンなしで自摸上がり</span><span class="yg-han">1翻</span></div>
-<div class="yg-row"><span class="yg-name">全順子</span><span class="yg-desc">3つの面子がすべて順子（連番3枚）</span><span class="yg-han">1翻</span></div>
+<div class="yg-row"><span class="yg-name">平和</span><span class="yg-desc">門前で3つの面子がすべて順子（連番3枚）</span><span class="yg-han">1翻</span></div>
 <div class="yg-sect">── 鳴き可（ポンあり可）──</div>
 <div class="yg-row"><span class="yg-name">タンヤオ</span><span class="yg-desc">手牌に1と${N_NUMS}の端牌がない。中張牌のみ</span><span class="yg-han">1翻</span></div>
 <div class="yg-row"><span class="yg-name">役牌(${SP_NAMES})</span><span class="yg-desc">特殊キャラ(${SP_NAMES})で刻子を作る</span><span class="yg-han">1翻/種</span></div>
-<div class="yg-row"><span class="yg-name">対々和</span><span class="yg-desc">全面子が刻子（同じ牌3枚）。ポンで成立。門前は三暗刻が付く</span><span class="yg-han yg-open">鳴き1翻</span></div>
+<div class="yg-row"><span class="yg-name">対々和</span><span class="yg-desc">全面子が刻子（同じ牌3枚）。門前なら三暗刻と複合しやすい</span><span class="yg-han yg-open">2翻</span></div>
 <div class="yg-row"><span class="yg-name">三暗刻</span><span class="yg-desc">ポンなし刻子×3(門前のみ)</span><span class="yg-han">2翻</span></div>
 <div class="yg-row"><span class="yg-name">三色同順</span><span class="yg-desc">3キャラで同じ数字の順子（例: 🐱123,🐶123,🐰123）</span><span class="yg-han yg-open">2/鳴1翻</span></div>
 <div class="yg-row"><span class="yg-name">三色同刻</span><span class="yg-desc">3キャラで同じ数字の刻子</span><span class="yg-han">2翻</span></div>
 <div class="yg-row"><span class="yg-name">一気通貫</span><span class="yg-desc">同一キャラで1-2-3と3-4-5の2つの順子</span><span class="yg-han yg-open">2/鳴1翻</span></div>
 <div class="yg-row"><span class="yg-name">チャンタ</span><span class="yg-desc">全面子・雀頭に1か${N_NUMS}を含む</span><span class="yg-han yg-open">2/鳴1翻</span></div>
-<div class="yg-row"><span class="yg-name">混一色</span><span class="yg-desc">2種類のキャラのみで構成（異なる色でもOK）</span><span class="yg-han yg-open">2/鳴1翻</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#f9a">同色 ★NEW</span><span class="yg-desc">同じ色グループ(${COLOR_NAMES.map(c=>c.name).join('/')})の2キャラのみ</span><span class="yg-han yg-open">3/鳴2翻</span></div>
-<div class="yg-row"><span class="yg-name">清一色</span><span class="yg-desc">1種類のキャラのみで全手牌を構成</span><span class="yg-han yg-open">3/鳴2翻</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#ffa;">4色</span><span class="yg-desc">4色グループ全て(赤緑青黄)の8キャラ全種類を使用。鳴き関係なし</span><span class="yg-han">1翻</span></div>
+<div class="yg-row"><span class="yg-name">混一色</span><span class="yg-desc">2種類のキャラのみで構成。鳴くと1翻下がる</span><span class="yg-han yg-open">3/鳴2翻</span></div>
+<div class="yg-row"><span class="yg-name">清一色</span><span class="yg-desc">1種類のキャラのみで全手牌を構成する大物手</span><span class="yg-han yg-open">5/鳴4翻</span></div>
 <div class="yg-row"><span class="yg-name">三連刻</span><span class="yg-desc">連続する数字の刻子×3（例: 🐱1刻+🐱2刻+🐱3刻）。対々和+三連刻同時成立可</span><span class="yg-han">2翻</span></div>
 <div class="yg-row"><span class="yg-name">大役牌</span><span class="yg-desc">特殊キャラ(${SP_NAMES})両方で刻子を作る</span><span class="yg-han">2翻</span></div>
 <div class="yg-sect">── 役満（6翻相当） ──</div>
@@ -3038,13 +3105,13 @@ class GameEngine{
 <div class="yg-row"><span class="yg-name">嶺上開花</span><span class="yg-desc">ポン後の引き牌で上がる</span><span class="yg-han">1翻</span></div>
 <div style="margin-top:8px;padding:6px;background:rgba(255,215,0,.06);border-radius:8px;border:1px solid rgba(255,215,0,.2)">
 <div class="yg-sect" style="margin-top:0">── 翻数と点数の目安 ──</div>
-<div class="yg-row"><span class="yg-name" style="color:#aaa">1翻</span><span class="yg-desc">基礎点8→ツモ8+2×2 / ロン8+ボーナス</span><span class="yg-han" style="color:#aaa">約15〜20点</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#88f">2翻</span><span class="yg-desc">三暗刻・三連刻・混一色など</span><span class="yg-han" style="color:#88f">約35〜50点</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#4af">3翻</span><span class="yg-desc">清一色・同色・大役牌など</span><span class="yg-han" style="color:#4af">約70〜90点</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#ffd700">4翻</span><span class="yg-desc">複合役(清一色+三連刻など)</span><span class="yg-han" style="color:#ffd700">約120〜150点</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#ff8c00">5翻</span><span class="yg-desc">高火力複合役</span><span class="yg-han" style="color:#ff8c00">約190〜220点</span></div>
-<div class="yg-row"><span class="yg-name" style="color:#f0f;font-weight:900">役満</span><span class="yg-desc">清老頭・地和 (6翻扱い)</span><span class="yg-han" style="color:#f0f">≈200点固定</span></div>
-<div style="font-size:9px;color:#888;margin-top:4px;line-height:1.5">※ツモは全員から、ロンは放銃者から獲得<br>本場(連荘)ごとに+1点加算。開始持ち点${START_PT}点</div>
+<div class="yg-row"><span class="yg-name" style="color:#aaa">1翻</span><span class="yg-desc">軽い上がり。ロン/ツモの総量をほぼ同じに調整</span><span class="yg-han" style="color:#aaa">約30点</span></div>
+<div class="yg-row"><span class="yg-name" style="color:#88f">2翻</span><span class="yg-desc">対々和・三色・一通などの主力</span><span class="yg-han" style="color:#88f">約60点</span></div>
+<div class="yg-row"><span class="yg-name" style="color:#4af">3翻</span><span class="yg-desc">混一色・複合役。勝負手ライン</span><span class="yg-han" style="color:#4af">約105点</span></div>
+<div class="yg-row"><span class="yg-name" style="color:#ffd700">4翻</span><span class="yg-desc">満貫級。リーチ棒込みで一気にまくれる</span><span class="yg-han" style="color:#ffd700">約165点</span></div>
+<div class="yg-row"><span class="yg-name" style="color:#ff8c00">5翻</span><span class="yg-desc">跳満級の高火力手</span><span class="yg-han" style="color:#ff8c00">約240点</span></div>
+<div class="yg-row"><span class="yg-name" style="color:#f0f;font-weight:900">役満</span><span class="yg-desc">清老頭・地和 (6翻扱い)</span><span class="yg-han" style="color:#f0f">約300点</span></div>
+<div style="font-size:9px;color:#888;margin-top:4px;line-height:1.5">※親は約1.5倍。ロンは放銃者がまとめ払い、ツモは全員払い<br>本場ごとに+5点相当。開始持ち点${START_PT}点</div>
 </div>
 <div style="margin-top:6px;padding:4px 6px;background:rgba(255,215,0,.05);border-radius:5px;font-size:9.5px;color:#aaa;line-height:1.5">
 🔵 色グループ: 赤(${CHARS[0]}${CHARS[1]}) / 緑(${CHARS[2]}${CHARS[3]}) / 青(${CHARS[4]}${CHARS[5]}) / 黄(${CHARS[6]}${CHARS[7]})<br>
@@ -3108,7 +3175,8 @@ class GameEngine{
     this.gameMode=document.getElementById('sel-mode').value||'east';
     const fullPlayers=this.net._buildLobbyWithCpu();
     this._scores=new Array(N_PL).fill(START_PT);
-    const msg={type:'START',seed,players:fullPlayers,dealerIdx:0,gameMode:this.gameMode,scores:this._scores,dealerDone:new Array(N_PL).fill(0),honba:0,roundNum:0};
+    this.reachPot=0;
+    const msg={type:'START',seed,players:fullPlayers,dealerIdx:0,gameMode:this.gameMode,scores:this._scores,dealerDone:new Array(N_PL).fill(0),honba:0,roundNum:0,reachPot:this.reachPot};
     this.net.broadcast(msg);this._onStart(msg);
   }
 
@@ -3120,21 +3188,22 @@ class GameEngine{
     const infos=msg.players.map(p=>({...p,isMe:!p.isCpu&&p.peerId===myId}));
     this._scores=msg.scores?[...msg.scores]:new Array(N_PL).fill(START_PT);
     this.dealerDone=msg.dealerDone?[...msg.dealerDone]:new Array(N_PL).fill(0);
-    this.honba=msg.honba||0;this.roundNum=msg.roundNum||0;this.dealerIdx=msg.dealerIdx||0;
+    this.honba=msg.honba||0;this.roundNum=msg.roundNum||0;this.dealerIdx=msg.dealerIdx||0;this.reachPot=msg.reachPot||0;
     this._setupNet(infos);
     this.logs=[];document.getElementById('logbox').innerHTML='';
     this.log('🌐 ゲーム開始！','imp');
+    this.startGameBGM();
     this._startRound(msg.seed);this.net._startPing();
   }
 
   _sendNextRound(seed){
     this.players.forEach((p,i)=>{this._scores[i]=p.score;});
-    const msg={type:'NEXT_ROUND',seed,dealerIdx:this.dealerIdx,gameMode:this.gameMode,scores:this._scores.slice(),dealerDone:[...this.dealerDone],honba:this.honba,roundNum:this.roundNum};
+    const msg={type:'NEXT_ROUND',seed,dealerIdx:this.dealerIdx,gameMode:this.gameMode,scores:this._scores.slice(),dealerDone:[...this.dealerDone],honba:this.honba,roundNum:this.roundNum,reachPot:this.reachPot||0};
     this.net.broadcast(msg);this._onNextRound(msg);
   }
   _onNextRound(msg){
     this._scores=[...msg.scores];this.players.forEach((p,i)=>p.score=this._scores[i]);
-    this.dealerDone=[...msg.dealerDone];this.honba=msg.honba;this.roundNum=msg.roundNum;this.dealerIdx=msg.dealerIdx;this.gameMode=msg.gameMode;
+    this.dealerDone=[...msg.dealerDone];this.honba=msg.honba;this.roundNum=msg.roundNum;this.dealerIdx=msg.dealerIdx;this.gameMode=msg.gameMode;this.reachPot=msg.reachPot||0;
     this._startRound(msg.seed);
   }
   _onGameOver(msg){
@@ -3170,6 +3239,7 @@ class GameEngine{
     if(msg.dealerDone)this.dealerDone=[...msg.dealerDone];
     if(msg.dealerIdx!=null)this.dealerIdx=msg.dealerIdx;
     if(msg.honba!=null)this.honba=msg.honba;
+    if(msg.reachPot!=null)this.reachPot=msg.reachPot;
     this.players.forEach((p,i)=>{if(this._scores[i]!=null)p.score=this._scores[i];});
     this._render();this._confetti();
     // ★ 勝利演出
@@ -3202,26 +3272,29 @@ class GameEngine{
   leaveRoom(){
     this.net.destroy();this.isOnline=false;
     document.getElementById('net-modal').classList.remove('on');document.getElementById('nbadge').classList.remove('on');
-    this._scores=new Array(N_PL).fill(START_PT);this._setupSolo();this._render();
+    this._scores=new Array(N_PL).fill(START_PT);this.reachPot=0;this._setupSolo();this._render();
     document.getElementById('btn-jn').disabled=false;document.getElementById('btn-cr').disabled=false;
     this.log('🚪 退室しました');
   }
 
   startSolo(){
     this.isOnline=false;this.net.destroy();document.getElementById('nbadge').classList.remove('on');
-    this._scores=new Array(N_PL).fill(START_PT);this._setupSolo();
+    this._scores=new Array(N_PL).fill(START_PT);this.reachPot=0;this._setupSolo();
     this.dealerDone=new Array(N_PL).fill(0);this.dealerIdx=0;this.honba=0;this.roundNum=0;
     this.state='IDLE'; // ★ GAME_END 後の再スタートでも _advanceTurn が動くようにリセット
     this.logs=[];document.getElementById('logbox').innerHTML='';
     this.gameMode=document.getElementById('sel-mode').value||'east';
     const types=this.players.filter(p=>p.cpuType).map(p=>CPU_TYPE_LABEL[p.cpuType]).join(' / ');
     this.log(`🤖 ソロ開始！${this.gameMode==='half'?'半荘':'東風戦'} CPU: ${types}`,'imp');
+    this.startGameBGM();
     this._startRound();
   }
 
   _startRound(seed){
     this._clrT();this._clrGuard();this._roundEndGuard=false;
-    this.stopReachBGM&&this.stopReachBGM(); // ★ 新ラウンド: BGM強制停止
+    this.stopReachBGM&&this.stopReachBGM(); // ★ 新ラウンド: リーチBGM強制停止
+    this.stopWinBGM&&this.stopWinBGM();
+    this.startGameBGM&&this.startGameBGM();
     MEGA_FX.clear&&MEGA_FX.clear();
     this.state='IDLE'; // ★ ROUND_END/GAME_END のまま _advanceTurn が即リターンするのを防ぐ
     this._discardSeq=0;this._disarmNetWd(); // ★ シーケンスとウォッチドッグをリセット
@@ -3308,6 +3381,7 @@ class GameEngine{
     p.pendingReach=false;p.validReachIdx=[];p.isDoubleReach=false;
     p.selIdx=p.hand.length-1;
     this.stopReachBGM&&this.stopReachBGM(); // ★ 取消時にリーチBGM停止
+    this.startGameBGM&&this.startGameBGM();
     MEGA_FX.clear&&MEGA_FX.clear();         // ★ リーチ演出も即クリア
     this.log('↩ リーチ宣言を取消しました','imp');
     this._render();
@@ -3316,6 +3390,7 @@ class GameEngine{
   actReach(){
     if(this.state!=='DISCARD'||!this._isMyTurn())return;
     const p=this._h();if(p.isReach||p.pendingReach||p.melds.length)return;
+    if(p.score<REACH_BET){this.log('⚠ リーチ棒の点数が足りません','err');return;}
     const valid=[];for(let i=0;i<p.hand.length;i++)if(tenpai(p.hand.filter((_,j)=>j!==i),p.melds).length>0)valid.push(i);
     if(!valid.length){this.log('⚠ テンパイになれる捨て牌がありません','err');return;}
     p.pendingReach=true;p.validReachIdx=valid;const best=this._findRD(p.hand,p.melds);p.selIdx=best.idx;
@@ -3521,7 +3596,7 @@ class GameEngine{
       if(idx>=0)p.hand.splice(idx,1);else if(p.hand.length)p.hand.pop();
       p.discards.push(tile);p.selIdx=-1;
       if(msg.seq!=null)this._discardSeq=msg.seq; // ★ シーケンス番号を同期 (0も許容)
-      if(msg.isReach&&!p.isReach){const wt=tenpai(p.hand,p.melds);p.isReach=true;p.ippatsu=true;p.waiting=wt;this.log(p.name+': リーチ！','reach');SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();}
+      if(msg.isReach&&!p.isReach){const wt=tenpai(p.hand,p.melds);p.isReach=true;p.ippatsu=true;p.waiting=wt;this._payReach(p);this.log(p.name+': リーチ！','reach');SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();}
       if(msg.isDR)p.isDoubleReach=true;
       p.pendingReach=false;p.justPonned=false;p.upWait();if(!p.isReach)p.ippatsu=false;
       this.lastDiscard=tile;this.lastDiscardFrom=pi;
@@ -3588,7 +3663,7 @@ class GameEngine{
     const tile=p.hand.splice(idx,1)[0];p.discards.push(tile);p.selIdx=-1;
     this._discardSeq++; // ★ 捨て牌シーケンス番号をインクリメント
     let isReach=false,isDR=false;
-    if(p.pendingReach){const wt=tenpai(p.hand,p.melds);if(wt.length>0){p.isReach=true;p.ippatsu=true;p.waiting=wt;isReach=true;isDR=p.isDoubleReach||false;this.log('🔥 リーチ確定！待ち:'+wt.map(w=>CHARS[w.char]+w.num).join(''),'reach');}else this.log('⚠ リーチ取消','err');p.pendingReach=false;p.validReachIdx=[];}
+    if(p.pendingReach){const wt=tenpai(p.hand,p.melds);if(wt.length>0){p.isReach=true;p.ippatsu=true;p.waiting=wt;isReach=true;isDR=p.isDoubleReach||false;this._payReach(p);this.log('🔥 リーチ確定！待ち:'+wt.map(w=>CHARS[w.char]+w.num).join(''),'reach');}else this.log('⚠ リーチ取消','err');p.pendingReach=false;p.validReachIdx=[];}
     p.justPonned=false;p.upWait();
     if(p.waiting.length){const was=p.furiten;p.furiten=p.discards.some(d=>p.waiting.some(w=>w.char===d.char&&w.num===d.num));if(p.furiten&&!was&&p.idx===this.mySlot)this.log('⚠ フリテン！','err');}else p.furiten=false;
     // ★ Sev低: 一発役 - リーチ宣言以外の捨て牌 (=2巡目以降) ではリーチ者のippatsuを消す
@@ -3743,17 +3818,19 @@ class GameEngine{
         deltas.forEach((d,i)=>allDeltas[i]+=d);
         allYaku.push(...w.yaku);allMentsu.push(...w.mentsu);
       });
+      const best=this._ronWinners.reduce((a,b)=>b.yaku.reduce((s,y)=>s+y.han,0)>a.yaku.reduce((s,y)=>s+y.han,0)?b:a);
+      const reachBonus=this._takeReachPot(best.player.idx,allDeltas);
+      if(reachBonus)this.log(`🔥 供託リーチ棒は最高打点の ${best.player.name} へ +${reachBonus}点`,'pts');
       // ★ スコア先に反映
       allDeltas.forEach((d,i)=>{if(d!==0){this.players[i].score+=d;this._scores[i]=this.players[i].score;}});
       // ★ ダブル/トリプルロン オーバーレイ表示
       this._showMultiRon(label,this._ronWinners,allDeltas);
-      const best=this._ronWinners.reduce((a,b)=>b.yaku.reduce((s,y)=>s+y.han,0)>a.yaku.reduce((s,y)=>s+y.han,0)?b:a);
       const winners=[...this._ronWinners];
       this._ronWinners=[];
       // ROUND_RESULT broadcast
       if(this.isOnline&&this.net.isHost){
         this.players.forEach((p2,i)=>{this._scores[i]=p2.score;});
-        this.net.broadcast({type:'ROUND_RESULT',winnerIdx:best.player.idx,winType:label,yaku:allYaku,mentsu:allMentsu,deltas:allDeltas,han:allYaku.reduce((s,y)=>s+y.han,0),winTile:best.winTile?best.winTile.toJ():null,scores:this._scores.slice(),dealerDone:[...this.dealerDone],dealerIdx:this.dealerIdx,honba:this.honba});
+        this.net.broadcast({type:'ROUND_RESULT',winnerIdx:best.player.idx,winType:label,yaku:allYaku,mentsu:allMentsu,deltas:allDeltas,han:allYaku.reduce((s,y)=>s+y.han,0),winTile:best.winTile?best.winTile.toJ():null,scores:this._scores.slice(),dealerDone:[...this.dealerDone],dealerIdx:this.dealerIdx,honba:this.honba,reachPot:this.reachPot||0});
       }
       // _roundEndGuard & state
       this._roundEndGuard=true;this._clrT();this._clrGuard();this.state='ROUND_END';
@@ -3917,7 +3994,7 @@ class GameEngine{
       this._endRound(p,'ツモ',dec.yaku,dec.mentsu,p.hand[p.hand.length-1],deltas);return;}
     if(dec.action==='REACH'&&!p.melds.length){
       const sub=p.hand.filter((_,j)=>j!==dec.idx);const w=tenpai(sub,p.melds);
-      if(w.length>0){if(p.discards.length===0)p.isDoubleReach=true;p.isReach=true;p.ippatsu=true;p.waiting=w;SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this.react(p.idx,p.isDoubleReach?'Wリーチ！':'リーチ！');this.log(p.name+': '+(p.isDoubleReach?'ダブルリーチ！':'リーチ！'),'reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
+      if(w.length>0&&p.score>=REACH_BET){if(p.discards.length===0)p.isDoubleReach=true;p.isReach=true;p.ippatsu=true;p.waiting=w;this._payReach(p);SFX.reach();MEGA_FX.reach();this.startReachBGM&&this.startReachBGM();this.react(p.idx,p.isDoubleReach?'Wリーチ！':'リーチ！');this.log(p.name+': '+(p.isDoubleReach?'ダブルリーチ！':'リーチ！'),'reach');const disc=p.hand.splice(dec.idx,1)[0];p.discards.push(disc);p.upWait();this.lastDiscard=disc;this.lastDiscardFrom=p.idx;this.log(p.name+': '+disc+' 捨て');SFX.disc();
         this._discardSeq++;
         // ★ CPU DISCARD(reach) broadcast
         if(this.isOnline&&this.net.isHost){
@@ -3944,6 +4021,7 @@ class GameEngine{
     this._roundEndGuard=true;
     this._clrT();this._clrGuard();
     this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
+    this.startWinBGM&&this.startWinBGM(); // ★ あがり時BGM
     this.state='ROUND_END';         // ★ 必ず ROUND_END に設定
     this._winnerIdx=winner.idx;     // ★ アバター演出用(勝者/放銃者)
     this._dealInIdx=(type==='ロン')?this.lastDiscardFrom:-1;
@@ -3954,11 +4032,14 @@ class GameEngine{
       aDeltas=calcPts(yaku,this.honba,winner.idx,li,type==='ツモ',this.dealerIdx).deltas;
     }
 
+    const reachBonus=this._takeReachPot(winner.idx,aDeltas);
+
     // スコア加算
     aDeltas.forEach((d,i)=>{if(d!==0){this.players[i].score+=d;this._scores[i]=this.players[i].score;}});
 
     const han=yaku.reduce((s,y)=>s+y.han,0);const isDlr=this._isDlr(winner);
     this.log(`🎉 ${winner.name} ${type}！${han}翻${isDlr?' 親1.5倍':''}`,'win');
+    if(reachBonus)this.log(`🔥 供託リーチ棒 +${reachBonus}点`,'pts');
     this.log('役: '+yaku.map(y=>y.name+'('+y.han+')').join('+'),'pts');
     aDeltas.forEach((d,i)=>{if(d!==0)this.log(`  ${this.players[i].name}: ${d>0?'+':''}${d} → ${this.players[i].score}点`,'pts');});
 
@@ -3977,7 +4058,7 @@ class GameEngine{
         winnerIdx:winner.idx,winType:type,yaku,mentsu:allMentsu,
         deltas:aDeltas,han,winTile:winTile?winTile.toJ():null,
         scores:this._scores.slice(),dealerDone:[...this.dealerDone],
-        dealerIdx:this.dealerIdx,honba:this.honba
+        dealerIdx:this.dealerIdx,honba:this.honba,reachPot:this.reachPot||0
       });
     }
 
@@ -4003,6 +4084,7 @@ class GameEngine{
     if(this._roundEndGuard)return;this._roundEndGuard=true;
     this._clrT();this._clrGuard();
     this.stopReachBGM&&this.stopReachBGM(); // ★ リーチBGM停止
+    this.stopWinBGM&&this.stopWinBGM();
     MEGA_FX.clear&&MEGA_FX.clear();
     this.state='ROUND_END';
     this._winnerIdx=-1;this._dealInIdx=-1; // ★ 流局は勝者なし(アバター演出クリア)
@@ -4035,7 +4117,7 @@ class GameEngine{
       this.players.forEach((p2,i)=>{this._scores[i]=p2.score;});
       this.net.broadcast({type:'ROUND_RESULT',winnerIdx:-1,winType:reasonLabel,yaku:[],mentsu:[],
         deltas:tDeltas,han:0,winTile:null,scores:this._scores.slice(),
-        dealerDone:[...this.dealerDone],dealerIdx:this.dealerIdx,honba:this.honba
+        dealerDone:[...this.dealerDone],dealerIdx:this.dealerIdx,honba:this.honba,reachPot:this.reachPot||0
       });
     }
     const isGameOver=this._isGameOver();
@@ -4072,6 +4154,7 @@ class GameEngine{
       card.innerHTML=`<div class="rank-medal">${medals[rank]}</div><div class="rank-info"><div class="rank-name${isMe?' me':''}">${p.name}${tl}${p.isCpuFill?' 🤖':''}${p.isNet&&!p.isCpuFill?' 🌐':''}${isMe?' 👤':''}</div><div class="rank-score ${delta>=0?'plus':'minus'}">${p.score}<span style="font-size:14px">点</span></div><div class="rank-delta">初期比 ${delta>=0?'+':''}${delta}点</div></div><div class="rank-pos ${rankCls[rank]}">${rank+1}位</div>`;
       ranksEl.appendChild(card);
     });
+    this.stopGameBGM&&this.stopGameBGM();this.stopReachBGM&&this.stopReachBGM();this.stopWinBGM&&this.stopWinBGM();
     this._fireworks();document.getElementById('final-ov').classList.add('on');document.getElementById('ov').classList.remove('on');
   }
 
@@ -4236,7 +4319,7 @@ class GameEngine{
 
   restartGame(){
     document.getElementById('final-ov').classList.remove('on');
-    if(this.isOnline){if(this.net.isHost){const seed=Math.floor(Math.random()*0xffffffff);this._scores=new Array(N_PL).fill(START_PT);const fullPlayers=this.net._buildLobbyWithCpu();const msg={type:'START',seed,players:fullPlayers,dealerIdx:0,gameMode:this.gameMode,scores:this._scores,dealerDone:new Array(N_PL).fill(0),honba:0,roundNum:0};this.net.broadcast(msg);this._onStart(msg);}else this.log('ホストが次のゲームを開始するのを待っています…','imp');}
+    if(this.isOnline){if(this.net.isHost){const seed=Math.floor(Math.random()*0xffffffff);this._scores=new Array(N_PL).fill(START_PT);this.reachPot=0;const fullPlayers=this.net._buildLobbyWithCpu();const msg={type:'START',seed,players:fullPlayers,dealerIdx:0,gameMode:this.gameMode,scores:this._scores,dealerDone:new Array(N_PL).fill(0),honba:0,roundNum:0,reachPot:this.reachPot};this.net.broadcast(msg);this._onStart(msg);}else this.log('ホストが次のゲームを開始するのを待っています…','imp');}
     else this.startSolo();
   }
 
@@ -4331,9 +4414,10 @@ class GameEngine{
     const pe=document.getElementById('pot-hn');
     if(doraIndicators.length>0){
       const di0=doraIndicators[0];const dc=(di0.char+1)%N_CHARS;
-      const kanStr=doraIndicators.length>1?`×${doraIndicators.length}`:``;        
-      pe.innerHTML=`<span style="font-size:9px;color:#ffd700">ドラ:${CHARS[dc]}${di0.num}${kanStr}</span>`;
-    }else pe.textContent=this.honba>0?'本'+this.honba:'';
+      const kanStr=doraIndicators.length>1?`×${doraIndicators.length}`:``;
+      const reachStr=this.reachPot>0?`<br><span style="font-size:9px;color:#ff8c00">供託:${this.reachPot}</span>`:'';
+      pe.innerHTML=`<span style="font-size:9px;color:#ffd700">ドラ:${CHARS[dc]}${di0.num}${kanStr}</span>${reachStr}`;
+    }else pe.textContent=(this.honba>0?'本'+this.honba:'')+(this.reachPot>0?' 供託'+this.reachPot:'');
   }
 
   _seatMap(){const m=this.mySlot;return{bot:m,top:(m+2)%N_PL,left:(m+3)%N_PL,right:(m+1)%N_PL};}
@@ -4471,7 +4555,7 @@ class GameEngine{
     const canKaKan=s==='DISCARD'&&isMy&&p.canKaKan().length>0;
     const canKan=canDaiKan||canAnKan||canKaKan;
     let canReach=false;
-    if(s==='DISCARD'&&isMy&&!p.isReach&&!p.pendingReach&&!p.melds.length&&has_w)
+    if(s==='DISCARD'&&isMy&&!p.isReach&&!p.pendingReach&&!p.melds.length&&has_w&&p.score>=REACH_BET)
       for(let i=0;i<p.hand.length;i++)if(tenpai(p.hand.filter((_,j)=>j!==i),p.melds).length>0){canReach=true;break;}
     E('btn-draw',s==='DRAW'&&isMy);E('btn-disc',s==='DISCARD'&&isMy&&p.selIdx>=0&&p.selIdx<p.hand.length&&!canTsumo);E('btn-reach',canReach);E('btn-tsumo',canTsumo);E('btn-ron',canRon);E('btn-pon',canPon);E('btn-kan',canKan);
     // ★ Sev中: リーチ取消ボタン (pendingReach状態のみ表示)
